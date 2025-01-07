@@ -1,0 +1,47 @@
+@use './theme.scss';
+@use './mixins.scss' as *;
+
+* {
+	&:hover {
+		transition: color 0.2s ease-in-out;
+	}
+}
+
+* + * {
+	margin-top: var(--line-height);
+}
+
+html {
+	@include make-flex();
+}
+
+body {
+	font-style: normal;
+	font-optical-sizing: auto;
+	font-size: var(--font-size);
+	font-family: var(--font-family);
+	font-weight: var(--font-weight-normal);
+	font-variant-numeric: tabular-nums lining-nums;
+
+	// border: 1px solid white;
+	color: var(--foreground);
+	background-color: var(--background);
+
+	margin: 0;
+	width: 100%;
+	overflow-x: hidden;
+	padding: var(--line-height) 2ch;
+	line-height: var(--line-height);
+	max-width: calc(min(80ch, round(down, 100%, 1ch)));
+}
+
+a {
+	text-decoration: none;
+	color: var(--link-color);
+	&:visited {
+		color: var(--link-active-color);
+	}
+	&:hover {
+		color: var(--link-hover-color);
+	}
+}

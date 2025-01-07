@@ -1,0 +1,25 @@
+:root {
+	--background: #000000;
+	--foreground: #ffffff;
+	--link-color: #66ccff;
+	--link-hover-color: #56c5fd;
+	--link-active-color: #46bdf5;
+
+	--muted-separator: #414141;
+	--muted-foreground: #b3b3b3;
+
+	--accent-1: #f35815;
+	--border-thickness: 2px;
+
+	--font-size: 16px;
+	--line-height: 1.2rem;
+	--font-weight-bold: 800;
+	--font-weight-normal: 500;
+	--font-weight-medium: 600;
+	--font-family: 'JetBrains Mono', monospace;
+
+	&[data-theme='light'] {
+	}
+	&[data-theme='dark'] {
+	}
+}
