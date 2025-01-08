@@ -5,7 +5,7 @@
 	import type { LayoutData } from './$types';
 
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
-
+	
 	const user = $state(data);
 	setContext('user', user);
 </script>

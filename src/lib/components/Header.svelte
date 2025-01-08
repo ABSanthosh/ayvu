@@ -1,7 +1,8 @@
 <script lang="ts">
+	import type { User } from '$types/User.type';
 	import { getContext } from 'svelte';
 
-	const user = getContext('user');
+	const { user }: { user: User } = getContext('user');
 </script>
 
 <nav class="Header">

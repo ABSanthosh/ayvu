@@ -1,6 +1,6 @@
 import { db } from '$db';
 import { eq } from 'drizzle-orm';
-import type { User } from '../../types/User.type';
+import type { User } from '$types/User.type';
 import { Users } from './schema/User.schema';
 
 export async function upsertUser({
