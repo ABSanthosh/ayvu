@@ -1,9 +1,13 @@
 <script lang="ts">
-	// import '../styles/root/_mixins.scss';
+	import { setContext, type Snippet } from 'svelte';
 	import '../styles/root/global.scss';
 	import '../styles/root/reset.scss';
+	import type { LayoutData } from './$types';
 
-	let { children } = $props();
+	let { data, children }: { data: LayoutData; children: Snippet } = $props();
+
+	const user = $state(data);
+	setContext('user', user);
 </script>
 
 {@render children?.()}

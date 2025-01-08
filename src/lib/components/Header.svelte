@@ -1,10 +1,21 @@
+<script lang="ts">
+	import { getContext } from 'svelte';
+
+	const user = getContext('user');
+</script>
+
 <nav class="Header">
 	<h2>Ayvu</h2>
 	<ul class="Header__nav">
 		<li>
 			<a href="features">Features</a>
 			<a href="about">About</a>
-			<a href="sign-up">Get Started</a>
+			{#if user}
+				<a href="app">Dashboard</a>
+			{:else}
+				<form hidden action="/auth?/login" method="POST" id="google-login"></form>
+				<button type="submit" form="google-login">Get Started</button>
+			{/if}
 		</li>
 	</ul>
 </nav>
@@ -40,10 +51,14 @@
 				gap: 5px;
 				@include make-flex($dir: row);
 
-				a {
+				a,
+				button {
 					gap: 5px;
+					border: none;
+					cursor: pointer;
 					text-decoration: none;
 					@include make-flex($dir: row);
+					background-color: transparent;
 					color: var(--muted-foreground);
 
 					&:hover {

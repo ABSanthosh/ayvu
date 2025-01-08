@@ -17,10 +17,12 @@ const config = {
 	kit: {
 		adapter: adapter(),
 		alias: {
-			$components: 'src/lib/components',
-			$styles: 'src/styles/routes',
+			$db: 'src/lib/db',
+			$data: 'src/lib/data',
 			$utils: 'src/lib/utils',
-			$data: 'src/lib/data'
+			$types: 'src/lib/types', 
+			$styles: 'src/styles/routes',
+			$components: 'src/lib/components',
 		},
 	},
 	compilerOptions: {
