@@ -2,6 +2,7 @@
 	import type { User } from '$types/User.type';
 	import { getContext, type Snippet } from 'svelte';
 	import clickOutside from '$directive/clickOutside';
+	import ProfileImage from '$components/ProfileImage.svelte';
 
 	const { user }: { user: User } = getContext('user');
 
@@ -9,6 +10,10 @@
 
 	let isMenuOpen = $state(false);
 </script>
+
+<svelte:head>
+	<title>Ayvu</title>
+</svelte:head>
 
 <nav class="AppHeader">
 	<ul class="AppHeader__nav">
@@ -31,7 +36,7 @@
 		<summary>Menu</summary>
 		<ul class="CrispMenu__content" data-align="right" data-direction="bottom">
 			<div class="AppHeader__user">
-				<img src={user.picture} alt={user.name} />
+				<ProfileImage src={user.picture} name={user.name} alt={user.name} />
 				<div class="AppHeader__user__info">
 					<h3>{user.name}</h3>
 					<p>{user.email}</p>
@@ -89,6 +94,7 @@
 			}
 
 			& > h2 > a {
+				user-select: none;
 				margin-right: 10px;
 				text-decoration: none;
 				color: var(--foreground);
@@ -102,6 +108,7 @@
 					gap: 5px;
 					border: none;
 					cursor: pointer;
+					user-select: none;
 					white-space: nowrap;
 					text-decoration: none;
 					@include make-flex($dir: row);
@@ -167,16 +174,11 @@
 			max-width: 100%;
 			@include make-flex($dir: row, $just: flex-start);
 
-			img {
-				border-radius: 3px;
-				@include box(42px, 42px);
-			}
-
 			&__info {
 				max-width: 100%;
-				@include box($height: 40px);
-
+				user-select: none;
 				display: inline-grid;
+				@include box($height: 40px);
 
 				h3 {
 					font-size: 1rem;

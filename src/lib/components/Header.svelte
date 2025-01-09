@@ -35,6 +35,7 @@
 		}
 
 		h2 {
+			user-select: none;
 			@include respondAt(400px) {
 				margin-right: auto;
 			}
@@ -57,6 +58,7 @@
 					gap: 5px;
 					border: none;
 					cursor: pointer;
+					user-select: none;
 					text-decoration: none;
 					@include make-flex($dir: row);
 					background-color: transparent;
