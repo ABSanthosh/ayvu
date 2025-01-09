@@ -1,4 +1,4 @@
-<span class="App_header">Your Reads</span>
+<span class="App_header">Explore</span>
 
 <style lang="scss">
 	.App_header {

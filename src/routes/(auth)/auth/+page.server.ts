@@ -15,7 +15,6 @@ export const actions: Actions = {
 			],
 			prompt: 'consent'
 		});
-		console.log(url);
 		throw redirect(302, url);
 	},
 	logout: async ({ cookies }) => {

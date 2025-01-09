@@ -18,8 +18,17 @@
 	--font-weight-medium: 600;
 	--font-family: 'JetBrains Mono', monospace;
 
+	--t-crp-background-hover: #1f2328;
+	--t-crp-border: #1f2328;
+	--t-crp-border-hover: #1f2328;
+	--t-crp-elevation-shadow: 0px 2px 4px 0px #00000040;
+	--t-crp-border: #1f2328;
+	--t-crp-light-border: #1f2328;
+
 	&[data-theme='light'] {
+		--t-crp-box-shadow: #1f23280a 0px 1px 0px 0px, #ffffff40 0px 1px 0px 0px inset;
 	}
 	&[data-theme='dark'] {
+		--t-crp-box-shadow: #00000000 0px 0px 0px 0px, #00000000 0px 0px 0px 0px;
 	}
 }
