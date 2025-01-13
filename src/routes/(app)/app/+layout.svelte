@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { LayoutData } from './$types';
 	import type { User } from '$types/User.type';
 	import { getContext, type Snippet } from 'svelte';
 	import clickOutside from '$directive/clickOutside';
@@ -6,7 +7,7 @@
 
 	const { user }: { user: User } = getContext('user');
 
-	let { children }: { children: Snippet } = $props();
+	let { children, data }: { children: Snippet; data: LayoutData } = $props();
 
 	let isMenuOpen = $state(false);
 </script>
@@ -21,10 +22,10 @@
 			<a href="/"> Ayvu </a>
 		</h2>
 		<li>
-			<a href="/app">Your Reads</a>
+			<a href="/app" data-active={data.pageTitle === 'Your Reads'}>Your Reads</a>
 		</li>
 		<li>
-			<a href="/app/explore">Explore</a>
+			<a href="/app/explore" data-active={data.pageTitle === 'Explore'}>Explore</a>
 		</li>
 	</ul>
 	<details
@@ -71,6 +72,10 @@
 	</details>
 </nav>
 
+<span class="AppHeader__pageTitle">
+	{data.pageTitle}
+</span>
+
 {@render children?.()}
 
 <style lang="scss">
@@ -116,6 +121,10 @@
 					color: var(--muted-foreground);
 
 					&:hover {
+						color: var(--foreground);
+					}
+
+					&[data-active='true'] {
 						color: var(--foreground);
 					}
 				}
@@ -193,6 +202,18 @@
 					text-overflow: ellipsis;
 					color: var(--muted-foreground);
 				}
+			}
+		}
+
+		&__pageTitle {
+			font-size: 22px;
+			@include box($height: 60px);
+			@include make-flex($dir: row, $just: flex-start);
+
+			&::before {
+				content: '';
+				@include box(10px, 25px);
+				border-left: 3px solid var(--accent-1);
 			}
 		}
 	}
