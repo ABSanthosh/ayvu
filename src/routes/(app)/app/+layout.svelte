@@ -150,6 +150,7 @@
 			}
 			& > summary {
 				--crp-menu-border: 0;
+				--crp-menu-border-hover: 0;
 				--crp-menu-color: var(--accent-1);
 				--crp-menu-summary-padding: 2px 10px;
 				--crp-menu-summary-border-radius: 3px;
