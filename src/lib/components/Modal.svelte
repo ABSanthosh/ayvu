@@ -20,31 +20,39 @@
 	});
 </script>
 
-<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
-<dialog
-	class="Modal"
-	bind:this={dialog}
-	onclose={() => (showModal = false)}
-	onclick={(e) => {
-		if (e.target === dialog) dialog.close();
-	}}
->
-	<div class="Modal__content" data-type={type}>
-		<header>
-			<h3>
-				{header}
-			</h3>
-			<hr />
-			<!-- svelte-ignore a11y_autofocus -->
-			<button class="CrispButton" autofocus data-type="X" data-no-hover onclick={() => dialog.close()}>
-				[x]
-			</button>
-		</header>
-		<article>
-			{@render children?.()}
-		</article>
-	</div>
-</dialog>
+{#if showModal}
+	<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
+	<dialog
+		class="Modal"
+		bind:this={dialog}
+		onclose={() => (showModal = false)}
+		onclick={(e) => {
+			if (e.target === dialog) dialog.close();
+		}}
+	>
+		<div class="Modal__content" data-type={type}>
+			<header>
+				<h3>
+					{header}
+				</h3>
+				<hr />
+				<!-- svelte-ignore a11y_autofocus -->
+				<button
+					class="CrispButton"
+					autofocus
+					data-type="X"
+					data-no-hover
+					onclick={() => dialog.close()}
+				>
+					[x]
+				</button>
+			</header>
+			<article>
+				{@render children?.()}
+			</article>
+		</div>
+	</dialog>
+{/if}
 
 <style lang="scss">
 	.Modal {
