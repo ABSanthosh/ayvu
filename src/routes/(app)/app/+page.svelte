@@ -1,11 +1,16 @@
 <script lang="ts">
+	import Modal from '$components/Modal.svelte';
 	import PaperCard from '$components/PaperCard.svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
+
+	let showModal = $state(false);
 </script>
 
 <main class="Papers">
+	<Modal bind:showModal header="Add Entry" type="min-size">hello</Modal>
+
 	{#each data.papers as paper, i (paper.id)}
 		<PaperCard {...paper} type="No-Preview" />
 
