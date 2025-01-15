@@ -13,7 +13,7 @@
 		showModal: boolean;
 	} = $props();
 
-	let dialog: HTMLDialogElement;
+	let dialog: HTMLDialogElement | undefined = $state();
 
 	$effect(() => {
 		if (dialog && showModal) dialog.showModal();
@@ -42,7 +42,7 @@
 					autofocus
 					data-type="X"
 					data-no-hover
-					onclick={() => dialog.close()}
+					onclick={() => dialog!.close()}
 				>
 					[x]
 				</button>
@@ -81,6 +81,7 @@
 			background-color: var(--modal-bg);
 			border: 1px solid var(--secondary);
 			box-shadow: var(--t-crp-box-shadow);
+
 			&[data-type='min-size'] {
 				@include box(min(calc(100vw - 50px), 80vh), 530px);
 			}
