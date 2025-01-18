@@ -5,5 +5,6 @@ export type User = {
 	picture: string | null;
 	accessToken: string;
 	refreshToken: string;
+	expiryDate: number;
 	idToken: string;
 };

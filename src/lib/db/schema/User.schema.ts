@@ -10,6 +10,7 @@ export const Users = sqliteTable('users', {
 	accessToken: text().notNull(),
 	refreshToken: text().notNull(),
 	idToken: text().notNull(),
+	expiryDate: integer().notNull(),
 	createdAt: text('timestamp')
 		.default(sql`(current_timestamp)`)
 		.notNull()

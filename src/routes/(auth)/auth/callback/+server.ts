@@ -9,6 +9,7 @@ export async function GET({ url, cookies }) {
 	try {
 		const client = new OAuth2Client(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI);
 		const response = await client.getToken(code!);
+
 		client.setCredentials(response.tokens);
 		const payload = (
 			await client.verifyIdToken({
@@ -25,6 +26,7 @@ export async function GET({ url, cookies }) {
 				picture: payload.picture || '',
 				idToken: client.credentials.id_token!,
 				accessToken: client.credentials.access_token!,
+				expiryDate: client.credentials.expiry_date!,
 				refreshToken: client.credentials.refresh_token!
 			});
 		} else {

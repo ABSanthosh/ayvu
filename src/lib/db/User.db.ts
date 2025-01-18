@@ -10,6 +10,7 @@ export async function upsertUser({
 	googleId,
 	idToken,
 	accessToken,
+	expiryDate,
 	refreshToken
 }: User) {
 	await db
@@ -21,6 +22,7 @@ export async function upsertUser({
 			googleId,
 			idToken,
 			picture,
+			expiryDate,
 			refreshToken
 		})
 		.onConflictDoUpdate({
@@ -38,4 +40,25 @@ export async function upsertUser({
 
 export async function getUserById(id: string) {
 	return (await db.selectDistinct().from(Users).where(eq(Users.googleId, id)).limit(1))[0] || null;
+}
+
+export async function updateUserTokens({
+	googleId,
+	accessToken,
+	refreshToken,
+	expiryDate
+}: {
+	googleId: string;
+	accessToken: string;
+	refreshToken: string;
+	expiryDate: number;
+}) {
+	return await db
+		.update(Users)
+		.set({
+			accessToken,
+			expiryDate,
+			refreshToken
+		})
+		.where(eq(Users.googleId, googleId));
 }
