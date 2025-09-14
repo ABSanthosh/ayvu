@@ -3,7 +3,10 @@
 
 // Crisp Styles
 @use '../Crisp/CrispMenu.scss' as *;
+@use '../Crisp/CrispLabel.scss' as *;
+@use '../Crisp/CrispInput.scss' as *;
 @use '../Crisp/CrispButton.scss' as *;
+@use '../Crisp/CrispMessage.scss' as *;
 
 * {
 	&:hover {
@@ -14,6 +17,13 @@
 // * + * {
 // 	margin-top: var(--line-height);
 // }
+
+*[data-mandatory] {
+	&:after {
+		content: ' *';
+		color: red;
+	}
+}
 
 html {
 	@include make-flex();

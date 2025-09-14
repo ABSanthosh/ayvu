@@ -3,6 +3,8 @@
 	import { getContext } from 'svelte';
 
 	const { user }: { user: User } = getContext('user');
+	let isMenuOpen = $state(false);
+
 </script>
 
 <nav class="Header">

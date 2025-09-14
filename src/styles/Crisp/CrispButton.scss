@@ -5,7 +5,7 @@
 	--crp-button-width: auto;
 	--crp-button-height: 30px;
 	--crp-button-font-size: 15px;
-	--crp-button-border-radius: 7px;
+	--crp-button-border-radius: 0px;
 	--crp-button-padding-top: 8px;
 	--crp-button-padding-left: 10px;
 	--crp-button-padding-right: 10px;
@@ -16,7 +16,7 @@
 	--crp-button-disabled-border: 1.2px solid var(--t-crp-disabled-border);
 
 	--crp-button-color: var(--foreground);
-	--crp-button-background-color: var(--background);
+	--crp-button-background-color: var(--t-crp-button-bg);
 	--crp-button-border: 1.2px solid var(--t-crp-border);
 	--crp-button-box-shadow: var(--t-crp-box-shadow);
 
@@ -98,6 +98,15 @@
 		&:hover,
 		&:focus {
 			color: var(--accent-1);
+		}
+	}
+
+	&[data-type='invert'] {
+		--crp-button-color: var(--t-crp-button-bg);
+		--crp-button-background-color: var(--foreground);
+
+		&:hover {
+			--crp-button-background-color: var(--t-crp-background-hover);
 		}
 	}
 

@@ -43,7 +43,7 @@
 					<p>{user.email}</p>
 				</div>
 			</div>
-			<li class="CrispMenu__item">
+			<button class="CrispButton w-100">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					width="18"
@@ -61,10 +61,10 @@
 					/> <circle cx="12" cy="12" r="3" />
 				</svg>
 				Settings
-			</li>
-			<li class="CrispMenu__item">
+			</button>
+			<li class="w-100">
 				<form hidden action="/auth?/logout" method="POST" id="google-login"></form>
-				<button style="width: 100%; cursor: pointer;" type="submit" form="google-login">
+				<button class="CrispButton w-100" data-type="invert" type="submit" form="google-login">
 					Log out
 				</button>
 			</li>
@@ -169,11 +169,6 @@
 					@include respondAt(400px) {
 						--crp-menu-content-width: calc(100vw - 42px);
 					}
-				}
-
-				&__item {
-					gap: 5px;
-					padding: 4px;
 				}
 			}
 		}

@@ -2,12 +2,12 @@
 	import type { Snippet } from 'svelte';
 
 	let {
-		type,
+		type = 'Normal',
 		header,
 		children,
 		showModal = $bindable()
 	}: {
-		type: string;
+		type?: string;
 		header: string;
 		children: Snippet;
 		showModal: boolean;
@@ -76,7 +76,8 @@
 
 		&__content {
 			display: none;
-			padding: 20px;
+			margin: 15px;
+			padding: 7px 20px 20px 20px;
 			background-color: transparent;
 			background-color: var(--modal-bg);
 			border: 1px solid var(--secondary);
@@ -87,7 +88,7 @@
 			}
 
 			& > header {
-				--__offset: 0.03fr;
+				--__offset: 15px;
 				display: grid;
 				align-items: end;
 				@include box(100%, auto);
@@ -96,7 +97,7 @@
 				& > h3 {
 					@include box(auto);
 					@include make-flex();
-					padding: 0 12px;
+					padding: 0 10px;
 					white-space: nowrap;
 				}
 

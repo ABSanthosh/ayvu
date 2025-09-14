@@ -26,3 +26,5 @@ vite.config.ts.timestamp-*
 *.db
 drizzle
 .vscode
+ingest.sh
+_context.txt
