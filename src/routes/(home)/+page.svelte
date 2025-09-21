@@ -19,6 +19,11 @@
 		}
 	}
 
+	:global(.Home__hero) {
+		font-family: var(--font-family);
+		// font-family: 'Editorial New', monospace;
+	}
+
 	:global(.Home__hero--title) {
 		font-size: 28px;
 		font-weight: 500;

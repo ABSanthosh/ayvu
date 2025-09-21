@@ -1,4 +1,5 @@
 @use './theme.scss';
+@forward './fonts.scss';
 @use './mixins.scss' as *;
 
 // Crisp Styles
@@ -34,6 +35,7 @@ body {
 	font-optical-sizing: auto;
 	font-size: var(--font-size);
 	font-family: var(--font-family);
+	-webkit-font-smoothing: antialiased;
 	font-weight: var(--font-weight-normal);
 	font-variant-numeric: tabular-nums lining-nums;
 
@@ -41,10 +43,10 @@ body {
 	color: var(--foreground);
 	background-color: var(--background);
 
-	margin: 0;
+	// margin: 0;
 	width: 100%;
 	overflow-x: hidden;
-	padding: var(--line-height) 2ch;
+	margin: var(--line-height) 2ch;
 	line-height: var(--line-height);
 	max-width: calc(min(80ch, round(down, 100%, 1ch)));
 }

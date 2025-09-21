@@ -4,6 +4,17 @@ import { isTokenExpiring } from '$utils/google';
 import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 import { OAuth2Client } from 'google-auth-library';
+import { dev } from '$app/environment';
+
+// Fix chrome dev error
+
+const handleDevError: Handle = async ({ event, resolve }) => {
+	if (dev && event.url.pathname === '/.well-known/appspecific/com.chrome.devtools.json') {
+		return new Response(undefined, { status: 404 });
+	}
+
+	return resolve(event);
+};
 
 const authentication: Handle = async ({ event, resolve }) => {
 	const googleSub = event.cookies.get('session');
@@ -63,4 +74,40 @@ const authorization: Handle = async ({ event, resolve }) => {
 	return resolve(event);
 };
 
-export const handle = sequence(authentication, authorization);
+const performance: Handle = async ({ event, resolve }) => {
+	const theme = event.cookies.get('theme');
+
+	const iconsToRequest = [...['settings'].sort((a, b) => a.localeCompare(b))] as const;
+
+	const googleFontIconLink = `<link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,0..1,-50..200&icon_names=${iconsToRequest.join(',')}&display=block"
+    />
+  `;
+
+	if (event.cookies.get('theme') === '') {
+		console.log('Theme cookie is empty, deleting it');
+		event.cookies.delete('theme', {
+			path: '/',
+			domain: new URL(event.request.url).hostname
+		});
+	}
+
+	if (!theme) {
+		return await resolve(event, {
+			transformPageChunk: ({ html }) => {
+				return html.replace('%iconFont%', googleFontIconLink);
+			}
+		});
+	}
+
+	return await resolve(event, {
+		transformPageChunk: ({ html }) => {
+			return html
+				.replace('data-theme=""', `data-theme="${theme}"`)
+				.replace('%iconFont%', googleFontIconLink);
+		}
+	});
+};
+
+export const handle = sequence(performance, authentication, authorization, handleDevError);

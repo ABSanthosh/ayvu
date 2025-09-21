@@ -1,4 +1,4 @@
-import * as mupdfjs from 'mupdf/mupdfjs';
+// import * as mupdfjs from 'mupdf/mupdfjs';
 import type { Actions, PageServerLoad } from './$types';
 import { uploadPdf } from '$lib/drive';
 import nanoid from '$utils/nanoid';
@@ -36,32 +36,32 @@ export const load: PageServerLoad = async () => {
 };
 
 export const actions: Actions = {
-	createEntry: async ({ request, locals }) => {
-		const data = await request.formData();
-		const fileName = nanoid();
-		const pdFile = data.get('pdf')! as File;
-		const pageCount = mupdfjs.PDFDocument.openDocument(
-			await pdFile.arrayBuffer(),
-			'application/pdf'
-		).countPages();
-		console.log(pageCount);
+	// createEntry: async ({ request, locals }) => {
+	// 	const data = await request.formData();
+	// 	const fileName = nanoid();
+	// 	const pdFile = data.get('pdf')! as File;
+	// 	const pageCount = mupdfjs.PDFDocument.openDocument(
+	// 		await pdFile.arrayBuffer(),
+	// 		'application/pdf'
+	// 	).countPages();
+	// 	console.log(pageCount);
 
-		if (pageCount > 25) {
-			return fail(406, {
-				error: {
-					pdf: 'Pdf file cannot have more than 25 pages.'
-				}
-			});
-		}
-		try {
-			const { fileId, webViewLink } = await uploadPdf(
-				pdFile,
-				fileName,
-				locals.user?.accessToken!,
-				locals.user?.refreshToken!
-			);
-		} catch (error) {
-			console.error('Upload failed:', error);
-		}
-	}
+	// 	if (pageCount > 25) {
+	// 		return fail(406, {
+	// 			error: {
+	// 				pdf: 'Pdf file cannot have more than 25 pages.'
+	// 			}
+	// 		});
+	// 	}
+	// 	try {
+	// 		const { fileId, webViewLink } = await uploadPdf(
+	// 			pdFile,
+	// 			fileName,
+	// 			locals.user?.accessToken!,
+	// 			locals.user?.refreshToken!
+	// 		);
+	// 	} catch (error) {
+	// 		console.error('Upload failed:', error);
+	// 	}
+	// }
 };
