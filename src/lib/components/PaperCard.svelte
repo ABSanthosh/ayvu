@@ -15,7 +15,7 @@
 		preview: string;
 	} = $props();
 
-	import preview from './preview.png';
+	import preview from '../data/preview.png';
 </script>
 
 {#snippet Content(title: string, authors: any[], published: string)}

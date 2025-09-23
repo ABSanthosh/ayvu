@@ -1,0 +1,387 @@
+There is an increasing interest in leveraging Large Language Models (LLMs) for managing structured data and enhancing data science processes \cite{nascimento2023gpt, dong2024large, li2024can}. Despite the potential benefits, this integration poses significant questions regarding their reliability and decision-making methodologies. Our objective is to elucidate and express the factors and assumptions guiding GPT-4's model selection recommendations. We employ a variability model to depict these factors and use toy datasets to evaluate both the model and the implementation of the identified heuristics. By contrasting these outcomes with heuristics from other platforms, our aim is to determine the effectiveness and distinctiveness of GPT-4's methodology. This research is committed to advancing our comprehension of AI decision-making processes, especially in the realm of model selection within data science. Our efforts are directed towards creating AI systems that are more transparent and comprehensible, contributing to a more responsible and efficient practice in data science.
+
+At the 49th International Conference on Very Large Data Bases (VLDB), a panel led by Halevy et al. \cite{halevy2023will} posed an important question about the future of Data Science in the context of Large Language Models (LLMs). The growing role of LLMs in tasks such as database querying, query generation, and making inferences, as evidenced in recent studies \cite{chopra2023conversational,vert2023will,john2023datachat,troy2023enabling}, highlights this evolving landscape. 
+The LangChain library \cite{LangChain} exemplifies this integration, enabling LLMs to work with various computational resources including data connectors, and has attracted significant attention, being utilized by over 30,000 developers in creating context-aware and reasoning applications.
+
+
+Despite the increasing use of GPT models in various tasks, concerns about their reliability and decision-making processes remain, as illustrated in Figure \ref{fig:failure}. This figure demonstrates an inconsistency in GPT-4's query results when integrated with the LangChain framework, raising questions about the sources of such discrepancies (e.g. issues with LangChain, GPT-4, or the prompt structure).
+
+
+Large Language Models (LLMs) are increasingly integral to data science, showcasing their potential in diverse areas such as data preprocessing, analytics, and even drug discovery \cite{vert2023will}. The study by Chopra et al. \cite{chopra2023conversational} highlights the use of LLMs in data science, particularly for tasks like data preprocessing and analytics. However, challenges arise in the interaction between data scientists and LLM-powered chatbots, especially in areas like contextual data retrieval, prompt formulation for complex tasks, and adapting generated code. These insights lead to the proposal of design improvements, including data brushing and inquisitive feedback loops, to enhance AI-assisted data science tools.
+
+Troy et al. \cite{troy2023enabling} focus on enabling generative AI to produce SQL statements. They propose a tool that generates syntactically valid language sentences and integrate AI algorithms for semantic guidance, demonstrating the capability of LLMs in generating structured queries for specific purposes, like detecting cyber-attacks.
+
+These studies collectively underscore the expanding role of LLMs in data science, from enhancing analytics and data management to contributing significantly to fields like drug discovery. However, the challenges, including effective communication with AI assistants and adapting AI-generated solutions to specific contexts, remain crucial areas for further development.
+ Imai \cite{imai2022github} claims that while there is speculation that AI-based computation can increase productivity and even substitute human pair-programmers in software development, there is currently a lack of empirical evidence to verify this.
+For the dataset, just publish the Link to the original problem (as StrataScratch may hold the copyrights over the questions)
+
+
+Research Contribution: While LLMs have been evaluated for generic programming tasks \cite{coignion2024performance}\cite{nathalia2023artificial}, their effectiveness in domain-specific contexts like Data Science needs more focused research. To the best of our knowledge, it is the first empirical study accessing different LLMs to solve specific data science coding problems. 
+Nguyen and Nadi \cite{nguyen2022empirical} also conducted an empirical study using GitHub Copilot's generated code to assess the correctness and understandability of solutions for 33 Leetcode problems in four different programming languages. To evaluate the correctness, the authors counted the number of test cases that passed for each problem, and to assess understandability, they employed SonarQube, an open-source platform for static code analysis, to calculate complexity and cognitive complexity metrics. The authors did not focus on performance and memory efficiency, so they did not provide execution time or memory use for each solution, nor did they compare the Copilot's and human-written solutions.
+
+
+ Li et al. presented AlphaCode \cite{li2022competition}, a code generation system. They trained their model using GitHub and CodeContests data. After using AlphaCode to solve competitive programming problems from the Codeforces platform, the authors state that ``AlphaCode achieved on average a ranking of top 54.3\% in competitions with more than 5,000 participants". They compared their solution against the developers' ones based on the contest metrics, which are a fraction of the time left in the contest and incorrect submission penalties.
+ Lertbanjongngam et al. \cite{lertbanjongngam2022empirical} extended AlphaCode evaluation. Using the same code provided by AlphaCode in \cite{li2022competition} for the Codeforces competitive programming problems, they assessed human-like coding similarity, performance and memory efficiency. Their results show that AlphaCode-generated codes are similar to human codes, having a uniqueness of less than 10\% of code fragments. They also show that the code that was produced exhibits similar or inferior execution time and memory usage compared to the code written by humans.
+ Nascimento et al. \cite{nathalia2023artificial} compared generated-code by ChatGpt against human generated code using LeetCode problems in order to access performance and memory efficiency. 
+Kuhail et al. \cite{kuhail2024will} also accessed ChatGpt using Leetcode, investigating 180 coding problems. Coignion et al. investigated different LLMs using general coding problems from LeetCode in terms of performance \cite{coignion2024performance}.
+
+In the context of Data Science, Malekpour et al. \cite{malekpour2024towards} proposed In this paper, we propose the first LLM
+5 routing framework for Text-to-SQL, which selects the weakest, most cost-efficient
+6 LLM capable of generating accurate SQL. We introduce two routing approaches
+7 that achieve near-accuracy of the most powerful LLMs while reducing costs by
+8 1.4x to 1.8x. These routers are a first step towards cost-based optimization in Text-
+9 to-SQL pipelines. They are designed to be easy to train and fast during prediction,
+accessed GPT-4o (4o); ii) GPT-4o-mini (mini); and
+85 iii) Llama-3.1-8B-instruct-q4_0 (Llama).
+"We conducted our experiments using the BIRD dataset [8], which is widely considered to be the
+81 most challenging Text-to-SQL benchmark. Our evaluation set consisted of all 1534 queries in the dev
+82 dataset. Our training set acted as H and consisted of 9428 queries." They do not present an experiment? 
+
+"a BIg bench for
+laRge-scale Database grounded in text-to-SQL tasks, containing 12,751 text-toSQL pairs and 95 databases with a total size of 33.4 GB, spanning 37 professional
+domains. The experimental results
+demonstrate the significance of database values in generating accurate text-to-SQLs
+for big databases. Evaluated PAlm-2, Codex, ChatGPT, Claude-2, Human Perforemance. Furthermore, even the most effective text-to-SQL models, i.e.
+GPT-4, only achieve 54.89\% in execution accuracy, which is still far from the
+human result of 92.96\%, proving that challenges still stand."
+Moreover, even the
+most advanced text-to-SQL models, such as GPT-4, achieve only
+54.89\% accuracy in execution, a considerable distance from the human benchmark of 92.96\%, proving that challenges still stand \cite{li2024can}
+
+"We evaluate GPT’s effectiveness for frequent data transformation tasks and compare it against other data transformation tools on a benchmark. Our findings demonstrate the practical utility of GPT models in data transformation. In summary, GPT-4’s performance across different datasets and tasks  \cite{li2024can}"
+
+"To explore the challenges of data analysis with conversational AI
+assistants, we conducted a formative study with 15 participants (12
+male, 3 female, 0 non-binary) using the Noteable plugin for ChatGPT [1]. At the time of the study, Noteable was the only publicly
+available tool offering features similar to ChatGPT Data Analysis
+(formerly Code Interpreter). With Noteable, participants could up-
+load datasets to a Noteable project and enter a natural language (NL)
+descriptions of their data analysis task in ChatGPT. In response,
+ChatGPT would generate code cells in the Noteable project, which
+Noteable would execute. ChatGPT then displayed Noteable’s output
+including any tables or visualizations, and generated an interpreta-
+tion of the results. ChatGPT would then continue generating code if
+the task was incomplete, or asked users for additional information
+if required. LLM-powered tools like ChatGPT Data Analysis, have the potential
+to help users tackle the challenging task of data analysis program-
+ming, which requires expertise in data processing, programming,
+and statistics. However, our formative study (n=15) uncovered seri-
+ous challenges in verifying AI-generated results and steering the
+AI (i.e., guiding the AI system to produce the desired output).A controlled, withinsubjects experiment (n=18) compared these systems against a con-
+versational baseline."
+\cite{kazemitabaar2024improving}
+
+
+
+% By advancing our understanding of LLM capabilities in data science, we hope to contribute to the development of more reliable and efficient AI tools that can support practitioners in this rapidly evolving field.
+
+
+
+Research Questions: Which types of Data Science tasks are best suited for LLM-generated code, and which tasks pose significant challenges for LLMs?
+Research Problem:
+"Evaluating the Effectiveness of LLMs in Automating Code Generation for Data Science Problems"
+
+Context: The field of Data Science requires practitioners to write a lot of code for tasks like data manipulation, visualization, statistical analysis, and machine learning. Writing this code can be time-consuming, error-prone, and requires significant expertise. LLMs, trained on vast amounts of data including coding examples, have the potential to assist or even automate parts of this process. However, their accuracy, reliability, and applicability for Data Science-specific coding tasks are still under evaluation.
+
+Objective: The goal of the research is to evaluate the effectiveness of LLM-generated code in solving common Data Science tasks, such as:
+
+Data preprocessing and wrangling (e.g., cleaning and transforming datasets),
+Data visualization (e.g., generating plots using libraries like Matplotlib, Seaborn),
+Analytics (e.g., running statistical tests, calculating key metrics),
+
+\subsection{Tests}
+"an experiment consists of a set of tests/trials where each test is a combination of treatment, subject, and object. This type of test should not be mixed up with statistical tests. The number of tests affects the experimental error, estimate the mean effect of any experimental factor"
+
+Template of tests executed in this experiment: The data scientist uses /{LLM-X/} for generating code to solve {DS-Problem-Type-X} at {difficulty level-X} allowing Platform Adaptation. 
+
+Test 1: The data scientist uses Microsoft Copilot (GPT-4 Turbo) for generating code to solve Data Visualization coding problems at easy level allowing Platform Adaptation. 
+
+Test 2: The data scientist uses ChatGPT (o1-preview) for generating code to solve Data Visualization coding problems at easy level allowing Platform Adaptation. 
+
+
+
+
+"those variables that we want to study to see the effect of the changes in the independent variables are called dependent variable (or response variables)"
+"An experiment studies the effect of changing one or more independent variables. Those variables are called factors. The other independent variables are controlled at a fixed level during the experiment, or else we cannot say if the factor or another variable causes the effect. A treatment is one particular value of a factor"
+"Treatments are being applied to the combination of objects or subjects. An object can, for example, be a document. Their characteristics can be independent variables. "
+
+Objects: question complexity; DS problem type; Platform Adaptation (yes/no)
+
+Dependent variables: effectiveness for the three types of DS problems; efficacy for Algorithms questions; similarity for visualization problems; 
+
+Independent variables: variable-A: AI assistants and their LLMs used to generate code; 
+Treatments of variable-A: Microsoft Copilot (GPT-4 Turbo); ChatGPT (o1-preview); Claude (3.5 Sonnet); Perplexity Lab (Llama-3.1-70b-instruct). 
+
+
+ Our findings indicate that \textcolor{red}{XXXXXX} while LLMs perform well on simpler tasks, they struggle with more complex data science challenges, revealing key areas for improvement. We further assess Stratacratch as a benchmark platform, providing empirical insights that contribute to standardizing LLM evaluations in data science.
+
+
+ "Large language models (LLMs) such as ChatGPT have shown remarkable capabilities in code generation. Despite significant
+achievements, they rely on enormous training data to acquire a broad spectrum of open-domain knowledge. Besides, their
+evaluation revolves around open-domain benchmarks like HumanEval, which primarily consist of programming contests.
+Therefore, it is hard to fully characterize the intricacies and challenges associated with particular domains (e.g., web, game, and
+math). In this paper, we conduct an in-depth study of the LLMs in domain-specific code generation. Our results demonstrate
+that LLMs exhibit sub-optimal performance in generating domain-specific code, due to their limited proficiency in utilizing
+domain-specific libraries." They accessed in a general view and for specific domains, like web development and game development. \cite{gu2024effectiveness}
+
+
+
+\section{Introduction}
+
+Large Language Models (LLMs) have emerged as transformative tools with the potential to revolutionize code generation in various domains, including data science \cite{nascimento2023gpt, halevy2023will, li2024can, lai2023ds, kazemitabaar2024improving}. Their ability to generate human-like text and code opens up possibilities for automating complex tasks in data manipulation, visualization, and analytics. As data science projects often require extensive coding efforts that are time-consuming and demand significant expertise, leveraging LLMs could greatly enhance productivity and accessibility in this field. However, the effectiveness and reliability of LLM-generated code for data science applications remain underexplored, necessitating a thorough evaluation.
+
+
+While previous studies have evaluated LLMs in general programming tasks using platforms like LeetCode \cite{nguyen2022empirical, nathalia2023artificial, kuhail2024will, coignion2024performance}, the HumanEval benchmark \cite{chen2021evaluating}, and GitHub Projects \cite{grewal2024analyzing}, Gu et al. \cite{gu2024effectiveness} identified a notable gap in approaches to evaluate domain-specific code generation. They demonstrated that LLMs exhibit sub-optimal performance in generating domain-specific code for areas such as web and game development, due to their limited proficiency in utilizing domain-specific libraries. This finding underscores the need for more focused evaluations that consider the unique challenges of specialized domains like data science, which involve tasks such as handling datasets, performing complex statistical analyses, and generating insightful visualizations—areas not fully represented in general programming assessments. This paper addresses this gap by providing an empirical evaluation of multiple LLMs on diverse data science-specific coding problems sourced from the Stratascratch platform \cite{stratascratch_master_coding}. By assessing their performance across different task categories and difficulty levels, we contribute to an understanding of LLM capabilities and limitations in the context of data science code generation.
+
+\textbf{Our contributions are multifold:}
+\begin{enumerate}
+    \item We provide an empirical evaluation of multiple LLMs on data science-specific coding problems, filling a gap in current research;
+    \item We assess Stratascratch as a platform to benchmark LLMs for data science code generation;
+    \item We analyze the performance of these models across different task categories—Analytical, Algorithm, and Visualization—and difficulty levels, offering insights into their practical utility in data science workflows.
+    \item We highlight the challenges and limitations of LLMs in this domain, providing a foundation for future improvements and research in AI-assisted data science.
+\end{enumerate}
+
+This paper is organized as follows. Section 2 presents the related work. Section 3 describes the controlled experiment, outlining the research questions, hypotheses, and methodology. Section 4 presents the experimental results and discusses threats to validity. The paper concludes in Section 5 with final remarks and suggestions for future work.
+
+
+
+\textcolor{red}{
+\textbf{Quantitative Analysis: }
+Calculate the success rate of each LLM in generating correct code across all problems. 
+Determine success rates by: 
+Difficulty level (easy, medium, hard) 
+Problem type (Analytics, Algorithms, Visualization) 
+\textbf{Comparative Analysis: }
+Use statistical methods (e.g., ANOVA, chi-squared tests) to identify significant differences in code generation performance between LLMs. 
+\textbf{Error Analysis: }
+Examine common coding errors or failure patterns to understand the limitations of each LLM in code generation. 
+}
+
+\textcolor{red}{TODO - This section is a draft. } 
+
+
+
+ \section{DRAFT:}
+ \begin{enumerate}
+     \item  Comparison of Accuracy Among LLMs (RQ1)
+Plot: A bar chart or box plot comparing the \textbf{accuracy (percentage of correct solutions)} for each LLM. Each bar/box would represent an LLM, and the height/position would reflect its overall accuracy.
+Analysis: Use statistical tests (e.g., ANOVA) to check for significant differences in accuracy across the LLMs.
+\item Effect of Difficulty Level on Accuracy (RQ2).
+Plot: A grouped bar chart or line plot with difficulty levels on the x-axis and accuracy on the y-axis. Group or color-code the data by LLMs (e.g., separate bars/lines for each LLM within each difficulty level).
+Analysis: Use statistical tests (e.g., two-way ANOVA) to analyze how difficulty level impacts accuracy across the LLMs. You could also look for interaction effects between LLM and difficulty level on accuracy.
+\item Effect of Task Type on Accuracy (RQ3).
+Plot: A grouped bar chart or line plot with task type on the x-axis (Analytical, Algorithm, Visualization) and accuracy on the y-axis. Each group/color represents an LLM.
+Analysis: Another two-way ANOVA or a similar test can be used to determine if task type has a significant effect on accuracy across the LLMs. You might also explore interaction effects between task type and LLM type.
+\item Efficiency in Running Time for Analytical Questions (RQ4)
+Plot: A box plot or violin plot for running time, with each LLM represented on the x-axis and running time on the y-axis. This allows you to visualize the spread and central tendency of execution times for Analytical tasks across the LLMs.
+Analysis: Use statistical tests (e.g., Kruskal-Wallis or ANOVA, depending on distribution) to determine if there are significant differences in running time among LLMs for Algorithm tasks.
+\item Graph Similarity Scores for Visualization Questions (RQ5)
+Plot: A box plot or strip plot showing similarity scores for each LLM, with the x-axis representing each LLM and the y-axis representing similarity scores.
+Analysis: Perform statistical analysis (e.g., one-way ANOVA or t-tests) to identify any significant differences in similarity scores across the LLMs.
+\item Overall Comparison of LLM Performance Across Metrics
+Plot: A radar/spider chart with each LLM represented as a different line or color and each axis representing a different performance metric (e.g., overall accuracy, average running time, average similarity score).
+Analysis: This provides a holistic view of each LLM's performance across multiple dimensions. You could also perform cluster analysis if you’re looking to categorize LLMs by performance profiles.
+
+ \end{enumerate}
+
+
+
+
+-----------
+
+
+% \begin{enumerate}
+%     \item RQ1: Is there a significant difference in the overall accuracy among the LLMs when generating code for data science problems?
+%     \item RQ2: How does the difficulty level of coding problems (easy, medium, hard) affect the accuracy of the different LLMs?
+%     \item RQ3: Does the type of data science task (Analytical, Algorithm, Visualization) influence the performance of the LLMs in terms of accuracy?
+%     \item RQ4: For Analytical questions, do the LLMs differ in the efficiency (running time) of the code they generate?
+%     \item RQ5: For Visualization questions, how similar are the generated graphs to the expected outputs across different LLMs?
+% \end{enumerate}
+
+\subsection{Hypotheses} \label{sec:hyphoteses}
+
+
+\begin{enumerate}
+\item For RQ1:
+Null Hypothesis (H0\_1): There is no significant difference in the overall accuracy among the LLMs.
+Alternative Hypothesis (H1\_1): There is a significant difference in the overall accuracy among the LLMs.
+\item For RQ2:
+Null Hypothesis (H0\_2): The difficulty level does not affect the accuracy of the LLMs.
+Alternative Hypothesis (H1\_2): The accuracy of the LLMs varies with the difficulty level.
+\item For RQ3:
+Null Hypothesis (H0\_3): The type of data science task does not influence the LLMs' performance in terms of accuracy.
+Alternative Hypothesis (H1\_3): The LLMs' performance varies with the type of data science task.
+\item For RQ4:
+Null Hypothesis (H0\_4): There is no significant difference in the running time of code generated by the LLMs for Analytical questions.
+Alternative Hypothesis (H1\_4): There is a significant difference in the running time of code generated by the LLMs for Analytical questions.
+\item For RQ5:
+Null Hypothesis (H0\_5): There is no significant difference in the similarity of generated graphs to the expected outputs among the LLMs.
+Alternative Hypothesis (H1\_5): There is a significant difference in the similarity of generated graphs to the expected outputs among the LLMs.
+\end{enumerate}
+
+\subsection{Metrics}
+To answer these research questions and test the hypotheses, we identified the following metrics:
+
+\begin{itemize}
+\item Overall Accuracy (this metric directly addresses Hypothesis H0\_1):
+\begin{itemize}
+    \item Number of Correct Solutions: Total correct solutions generated by each LLM for all question types.
+    \item Correct Solutions after Platform Adaptation: Number of correct solutions after acceptable manual code adjustments.
+\end{itemize}
+\item Accuracy per Difficulty Level: Number of correct solutions at each difficulty level (easy, medium, hard) for each LLM (this metric directly addresses Hypothesis H0\_2).
+\item Accuracy per Task Type: Number of correct solutions for each task type (Analytical, Algorithm, Visualization) for each LLM (this metric directly addresses Hypothesis H0\_3).
+
+\item Analytical Questions:
+\begin{itemize}
+    \item Running Time: Measure the execution time of the code generated by each LLM. This assesses efficiency and performance optimization (this metric directly addresses Hypothesis H0\_4).
+\end{itemize}
+
+\item Visualization Questions:
+\begin{itemize}
+    \item Graph Similarity: Quantify the similarity between the generated graphs and the expected outputs. Calculated using Stratascratch's similarity algorithm (this metric directly addresses Hypothesis H0\_5.).
+\end{itemize}
+
+\end{itemize}
+
+
+----------------------
+% controlled experiments are recommended to "Compare alternatives (i.e. to determine whether one alternative is better than another one)"
+
+We designed this controlled experiment following the guidelines provided by Wohlin et al. \cite{wohlin2012experimentation}. 
+
+\subsection{Goal}
+The primary goal of our experiment is to evaluate and compare the accuracy and performance of four leading LLM-based AI assistants-Microsoft Copilot (GPT-4 Turbo), ChatGPT (o1-preview), Claude (3.5 Sonnet), and Perplexity Lab (Llama-3.1-70b-instruct)-in generating code solutions for data science problems sourced from the Stratascratch platform \cite{stratascratch_master_coding}. Specifically, we aim to determine whether these models can effectively solve coding tasks of varying difficulty levels and types, and to identify any differences in their performance. 
+%\textcolor{red}{performance or accuracy?}.
+
+Based on this goal, we formulated the following research questions:
+To address these research questions, we established the following hypotheses:
+
+
+--------
+\textcolor{red}{For reference, see pages 76 and 221 of the book 'Experimentation in Software Engineering \cite{wohlin2012experimentation}' with full examples of controlled experiments}
+
+"Methods for statistical inference are applied with the purpose of showing with statistical significance that one method is better than the other" (page 76 \cite{wohlin2012experimentation})
+
+\textcolor{red}{Steps:}
+1. Present your data in a structured format, with columns for each variable.
+
+
+% 2. Exploratory Data Analysis:
+% 2.1 Calculate descriptive statistics (mean, median, standard deviation).
+% 2.2. Visualize data distributions.
+% (Plot individual performance in terms of difficulty levels and types of questions)
+
+
+
+RQ1: Is there a significant difference in the overall accuracy among the LLMs when generating code for data science problems? & 
+H0\_1: There is no significant difference in the overall accuracy among the LLMs. & 
+H1\_1: There is a significant difference in the overall accuracy among the LLMs. & 
+Number of correct solutions and correct solutions after acceptable manual code edits
+\\
+
+RQ1
+As depicted in Figure \ref{fig:overall-accuracy}, each LLM was tested on 100 data science coding tasks. The number of correct solutions per LLM was as follows: Copilot solved 60\% of problems, ChatGPT solved 72\%, Perplexity solved 66\%, and Claude solved 70\%. To assess effectiveness, we performed a one-tailed binomial test using the \texttt{scipy.stats} library with various baselines, analyzing whether each LLM's accuracy was significantly above these thresholds. The binomial test, a non-parametric method, is appropriate here because it does not assume a normal distribution, making it well-suited for analyzing binary outcomes (correct/incorrect) and for testing whether the observed proportion of correct solutions exceeds a predefined baseline \cite{wohlin2012experimentation}. 
+
+\textbf{Baseline 50\%:} With a baseline set at 50\%, the binomial test results showed that all four LLMs — ChatGPT (72\%, p-value = 0.0000), Perplexity (66\%, p-value = 0.0009), Claude (70\%, p-value = 0.0000), and Copilot (60\%, p-value = 0.0284) — achieved statistically significant effectiveness above random chance. This indicates that each LLM performs significantly better than a random baseline when solving data science coding tasks.
+
+\textbf{Baseline 60\%:} When evaluating against a more practical industry-standard baseline of 60\%, ChatGPT (72\%, p-value = 0.0084) and Claude (70\%, p-value = 0.0248) maintained statistical significance, indicating effectiveness above this threshold. However, Copilot (60\%, p-value = 0.5433) and Perplexity (66\%, p-value = 0.1303) did not achieve significance at this level.
+
+\textbf{Baseline 70\%:} With the baseline increased to 70\%, none of the LLMs demonstrated statistically significant effectiveness, suggesting that a high performance threshold remains challenging for these models.
+
+
+
+------------
+\section{Discussion: Results Interpretation}
+
+\textcolor{red}{ Results Interpretation: 
+Performance Insights: 
+Interpret the quantitative findings regarding the correctness and efficiency of the code generated by each LLM. 
+Strengths and Weaknesses: 
+Discuss areas where each LLM excels or underperforms in code generation for different problem types and difficulty levels. 
+Practical Implications: 
+Consider the applicability of each LLM for assisting in coding tasks in real-world data science scenarios. 
+}
+
+\textcolor{red}{see page 167 of the book}
+In this section the data analysis is interpreted with respect to the hypotheses stated in section \ref{sec:hyphoteses}. 
+
+
+
+It can hence be concluded that \textcolor{red}{there is significant difference among the four large language models....or there is no significant difference...}
+
+
+Zenodo - https://zenodo.org/records/14064111?preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6ImMzOWIwMzcxLTJjMGMtNDYxZS1hMTk5LWMzZjVkMzZkOGYxYSIsImRhdGEiOnt9LCJyYW5kb20iOiI1MWE3M2I4ODIwNjljMGVlYmQ1NzYxNWRlZTc3NWNiYiJ9.ZX2X1-DTWx4p7eQei4iuQ_USN_S-UOC4hxyA3uEa5CkLve3xEmGPg7lGm7cd4QMLsgvUjk-HDdtoXgWahManuA
+
+
+
+% \begin{table*}[!htb]
+% \small % Reduce font size within the table
+% \centering
+% \caption{Research Questions, Hypotheses, and Metrics}
+% \begin{tabular}{|p{5.2cm}|p{3.7cm}|p{3.7cm}|p{3.7cm}|}
+% \hline
+% \textbf{Research Question} & \textbf{Null Hypothesis} & \textbf{Alternative Hypothesis} & \textbf{Metrics} \\
+% \hline
+% RQ1: How successful are LLMs in solving data science coding problems? & 
+% H0\_1: The success rate of each LLM in solving data science coding problems is not significantly higher than random chance (50\%). & 
+% H1\_1: The success rate of each LLM in solving data science coding problems is significantly higher than random chance (50\%). & 
+% Percentage of correct solutions, including correct solutions after acceptable manual edits \\
+% \hline
+% RQ2: Does the difficulty level of coding problems (easy, medium, hard) influence the success rate of the different LLMs? & 
+% H0\_2: Difficulty level does not significantly affect the success rate of the LLMs. & 
+% H1\_2: The success rate of the LLMs varies significantly with difficulty level. & 
+% Success rate (percentage of correct solutions) across difficulty levels (easy, medium, hard) for each LLM \\
+% \hline
+% RQ3: Does the type of data science task (Analytical, Algorithm, Visualization) influence the success rate of the different LLMs? & 
+% H0\_3: The type of data science task does not significantly impact the LLMs' success rate. & 
+% H1\_3: The LLMs' success rate varies significantly with the type of data science task. & 
+% Success rate (percentage of correct solutions) for each task type (Analytical, Algorithm, Visualization) for each LLM \\
+% \hline
+% RQ4: For Analytical questions, do the LLMs differ in the efficiency (execution time) of the code they generate? & 
+% H0\_4: The population medians of the execution times across the LLMs for Analytical questions are equal. & 
+% H1\_4: At least one LLM has a different population median execution time for Analytical questions compared to others. & 
+% Execution time for each generated solution on Analytical problems, per LLM \\
+% \hline
+% RQ5: For Visualization questions, do the LLMs differ in the quality (image similarity) of the generated graphs compared to expected outputs? & 
+% H0\_5: The population medians of the similarity scores for generated graphs across the LLMs are equal. & 
+% H1\_5: At least one LLM has a different population median similarity score for generated graphs compared to others. & 
+% Similarity scores for generated graphs compared to expected outputs \\
+% \hline
+% \end{tabular}
+% \label{tab:research_questions_hypotheses_metrics}
+% \end{table*}
+
+
+
+% \begin{table}[H]
+% \centering
+% \caption{RQ1: Success rate results of LLMs at different baselines}
+% \label{tab:llm_success_rate}
+% \scriptsize 
+% \begin{tabular}{|c|c|c|c|c|}
+% \hline
+% \textbf{Baseline} & \textbf{LLM} & \textbf{Success Rate (\%)} & \textbf{p-value} & \textbf{Conclusion} \\ \hline
+% \multirow{4}{*}{50\%} 
+%     & Copilot     & 60\% & 0.0284 & Significant       \\ \cline{2-5} 
+%     & ChatGPT     & 72\% & 0.0000 & Significant       \\ \cline{2-5} 
+%     & Perplexity  & 66\% & 0.0009 & Significant       \\ \cline{2-5} 
+%     & Claude      & 70\% & 0.0000 & Significant       \\ \hline
+
+% \multirow{4}{*}{60\%} 
+%     & Copilot     & 60\% & 0.5433 & Not Significant   \\ \cline{2-5} 
+%     & ChatGPT     & 72\% & 0.0084 & Significant       \\ \cline{2-5} 
+%     & Perplexity  & 66\% & 0.1303 & Not Significant   \\ \cline{2-5} 
+%     & Claude      & 70\% & 0.0248 & Significant       \\ \hline
+
+% \multirow{4}{*}{70\%} 
+%     & Copilot     & 60\% & 0.9875 & Not Significant   \\ \cline{2-5} 
+%     & ChatGPT     & 72\% & 0.3768 & Not Significant   \\ \cline{2-5} 
+%     & Perplexity  & 66\% & 0.8371 & Not Significant   \\ \cline{2-5} 
+%     & Claude      & 70\% & 0.5491 & Not Significant   \\ \hline
+% \end{tabular}
+% \end{table}
+
+\begin{itemize} \item \textbf{Strength in Complex Tasks:} ChatGPT and Claude excel in both success rate and consistency, particularly in handling complex analytical and algorithmic tasks. Their robust performance makes them reliable choices for high-stakes data science applications where accuracy is critical.
+\item \textbf{Supportive Roles for Simpler Tasks:} Perplexity and Copilot, while less consistent on more challenging problems, offer efficient and reliable solutions for simpler tasks. This suggests their value as supportive tools within data science workflows, ideal for straightforward coding tasks.
+
+\item \textbf{Efficiency and Quality as Secondary Factors:} Despite some differences in execution speed and visualization quality, these metrics showed no statistically significant variation across models. Thus, while they may influence practical considerations, they are unlikely to be decisive for model selection, especially in scenarios where success rate and task consistency are prioritized.

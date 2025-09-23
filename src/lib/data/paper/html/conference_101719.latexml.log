@@ -1,0 +1,219 @@
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/TeX.pool.ltxml...
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/eTeX.pool.ltxml... 0.00 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/pdfTeX.pool.ltxml... 0.01 sec) 0.18 sec)
+.latexmlc-wrapped (LaTeXML version 0.8.8)
+invoked as [/nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/bin/.latexmlc-wrapped --split --splitat=section --timestamp=0 --navigationtoc=context --nocomments --javascript=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js?config=MML_HTMLorMML --destination=./paper.html ../1/conference_101719.tex]
+processing started Tue Sep 23 19:04:09 2025
+(Digesting TeX conference_101719...
+(Processing content /home/santhosh/Desktop/Projects/TypeScript/2025/1_Ayvu/ayvu/src/lib/data/paper/1/conference_101719.tex...
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/LaTeX.pool.ltxml...
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/textcomp.sty.ltxml... 0.01 sec) 0.28 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/IEEEtran.cls.ltxml...
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/article.cls.ltxml... 0.01 sec) 0.05 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/cite.sty.ltxml... 0.00 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/amsmath.sty.ltxml...
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/amsbsy.sty.ltxml...
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/amsgen.sty.ltxml... 0.00 sec) 0.01 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/amstext.sty.ltxml... 0.01 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/amsopn.sty.ltxml... 0.01 sec) 0.09 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/amssymb.sty.ltxml...
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/amsfonts.sty.ltxml... 0.00 sec) 0.02 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/algorithmic.sty.ltxml...
+Warning:missing_file:algorithmic Can't find package algorithmic
+	at algorithmic.sty.ltxml; line 26
+	Anticipate undefined macros or environments
+	search paths are /home/santhosh/Desktop/Projects/TypeScript/2025/1_Ayvu/ayvu/src/lib/data/paper/1, /home/santhosh/Desktop/Projects/TypeScript/2025/1_Ayvu/ayvu/src/lib/data/paper/html, /home/santhosh/Desktop/Projects/TypeScript/2025/1_Ayvu/ayvu/src/lib/data/paper/html
+	In Core::Gullet[@0x2b74a240] /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/algorithmic.sty.ltxml; line 26
+ 0.00 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/graphicx.sty.ltxml...
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/graphics.sty.ltxml... 0.01 sec) 0.03 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/xcolor.sty.ltxml...
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/color.sty.ltxml... 0.01 sec) 0.07 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/booktabs.sty.ltxml... 0.01 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/float.sty.ltxml... 0.00 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/tcolorbox.sty.ltxml...
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/expl3.sty.ltxml...
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/expl3.lua.ltxml... 0.00 sec)
+Warning:missing_file:expl3 Can't find package expl3
+	at expl3.sty.ltxml; line 20
+	Anticipate undefined macros or environments
+	In Core::Gullet[@0x2b74a240] /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/expl3.sty.ltxml; line 20
+ 0.00 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/xparse.sty.ltxml...
+Warning:missing_file:xparse Can't find package xparse
+	at xparse.sty.ltxml; line 24
+	Anticipate undefined macros or environments
+	In Core::Gullet[@0x2b74a240] /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/xparse.sty.ltxml; line 24
+ 0.00 sec)
+Warning:missing_file:tcolorbox Can't find package tcolorbox
+	at tcolorbox.sty.ltxml; line 24
+	Anticipate undefined macros or environments
+	In Core::Gullet[@0x2b74a240] /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/tcolorbox.sty.ltxml; line 24
+ 0.02 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/multirow.sty.ltxml... 0.00 sec)
+Error:undefined:{tcolorbox} The environment {tcolorbox} is not defined.
+	at conference_101719.tex; line 305 col 17 - line 305 col 17
+	Next token is T_OTHER[[] ( == T_OTHER[[])
+	In Core::Definition::Expandable[\begin {}] /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/LaTeX.pool.ltxml; line 182
+	 <= Core::Gullet[@0x2b74a240] <= Core::Stomach[@0x2b74bf38] <= ...
+ 4.89 sec) 4.92 sec)
+(Building...
+(Loading compiled schema /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/resources/RelaxNG/LaTeXML.model... 0.01 sec) 5.58 sec)
+(Rewriting... 0.00 sec)
+(Math Parsing 3 formulae ...... 0.02 sec)
+Math parsing succeeded:
+   ltx:XMath: 3/3
+   ltx:XMArg: 2/2
+Symbols assumed as simple identifiers (with # of occurences):
+   'H{italic}' (2), 'a{italic}' (1), 'p{italic}' (1)
+Set MATHPARSER_SPECULATE to speculate on possible notations.
+(Finalizing... 0.09 sec)
+Conversion complete: 4 warnings; 1 error; 1 undefined macro[{tcolorbox}]; 4 missing files[xparse.sty, expl3.sty, algorithmic.sty, tcolorbox.sty] (See /home/santhosh/Desktop/Projects/TypeScript/2025/1_Ayvu/ayvu/src/lib/data/paper/html/conference_101719.latexml.log)
+(post-processing...
+(Split paper.html processing...
+ [Split into in 10 TOCs]
+ 0.02 sec)
+(Scan paper.html processing...
+Scan: DBStatus: 3/0 objects
+ 0.00 sec)
+(Scan S1.html processing...
+Scan: DBStatus: 34/0 objects
+ 0.01 sec)
+(Scan S2.html processing...
+Scan: DBStatus: 42/0 objects
+ 0.00 sec)
+(Scan S3.html processing...
+Scan: DBStatus: 79/0 objects
+ 0.01 sec)
+(Scan S4.html processing...
+Scan: DBStatus: 186/0 objects
+ 0.02 sec)
+(Scan S5.html processing...
+Scan: DBStatus: 280/0 objects
+ 0.02 sec)
+(Scan S6.html processing...
+Scan: DBStatus: 293/0 objects
+ 0.00 sec)
+(Scan S7.html processing...
+Scan: DBStatus: 299/0 objects
+ 0.00 sec)
+(Scan S8.html processing...
+Scan: DBStatus: 317/0 objects
+ 0.00 sec)
+(Scan bib.html processing...
+Scan: DBStatus: 319/0 objects
+ 0.00 sec)
+(MakeBibliography bib.html processing...
+(Recursive MakeBibliography /home/santhosh/Desktop/Projects/TypeScript/2025/1_Ayvu/ayvu/src/lib/data/paper/1/references.bib...
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/TeX.pool.ltxml...
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/eTeX.pool.ltxml... 0.00 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/pdfTeX.pool.ltxml... 0.01 sec) 0.16 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/LaTeX.pool.ltxml...
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/textcomp.sty.ltxml... 0.01 sec) 0.27 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/BibTeX.pool.ltxml... 0.02 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/IEEEtran.cls.ltxml...
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/article.cls.ltxml... 0.01 sec) 0.06 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/cite.sty.ltxml... 0.00 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/amsmath.sty.ltxml...
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/amsbsy.sty.ltxml...
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/amsgen.sty.ltxml... 0.00 sec) 0.01 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/amstext.sty.ltxml... 0.01 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/amsopn.sty.ltxml... 0.01 sec) 0.09 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/amssymb.sty.ltxml...
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/amsfonts.sty.ltxml... 0.00 sec) 0.02 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/algorithmic.sty.ltxml...
+Warning:missing_file:algorithmic Can't find package algorithmic
+	at algorithmic.sty.ltxml; line 26
+	Anticipate undefined macros or environments
+	search paths are /home/santhosh/Desktop/Projects/TypeScript/2025/1_Ayvu/ayvu/src/lib/data/paper/html, /home/santhosh/Desktop/Projects/TypeScript/2025/1_Ayvu/ayvu/src/lib/data/paper/1, /home/santhosh/Desktop/Projects/TypeScript/2025/1_Ayvu/ayvu/src/lib/data/paper/html, /home/santhosh/Desktop/Projects/TypeScript/2025/1_Ayvu/ayvu/src/lib/data/paper/html, /home/santhosh/Desktop/Projects/TypeScript/2025/1_Ayvu/ayvu/src/lib/data/paper/html, /home/santhosh/Desktop/Projects/TypeScript/2025/1_Ayvu/ayvu/src/lib/data/paper/1, /home/santhosh/Desktop/Projects/TypeScript/2025/1_Ayvu/ayvu/src/lib/data/paper/html
+	In Core::Gullet[@0x2cb08f80] /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/algorithmic.sty.ltxml; line 26
+ 0.00 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/graphicx.sty.ltxml...
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/graphics.sty.ltxml... 0.01 sec) 0.01 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/xcolor.sty.ltxml...
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/color.sty.ltxml... 0.01 sec) 0.06 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/booktabs.sty.ltxml... 0.01 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/float.sty.ltxml... 0.00 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/tcolorbox.sty.ltxml...
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/expl3.sty.ltxml...
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/expl3.lua.ltxml... 0.00 sec)
+Warning:missing_file:expl3 Can't find package expl3
+	at expl3.sty.ltxml; line 20
+	Anticipate undefined macros or environments
+	In Core::Gullet[@0x2cb08f80] /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/expl3.sty.ltxml; line 20
+ 0.01 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/xparse.sty.ltxml...
+Warning:missing_file:xparse Can't find package xparse
+	at xparse.sty.ltxml; line 24
+	Anticipate undefined macros or environments
+	In Core::Gullet[@0x2cb08f80] /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/xparse.sty.ltxml; line 24
+ 0.00 sec)
+Warning:missing_file:tcolorbox Can't find package tcolorbox
+	at tcolorbox.sty.ltxml; line 24
+	Anticipate undefined macros or environments
+	In Core::Gullet[@0x2cb08f80] /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/tcolorbox.sty.ltxml; line 24
+ 0.02 sec)
+(Loading /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/Package/multirow.sty.ltxml... 0.00 sec)
+.latexmlc-wrapped (LaTeXML version 0.8.8)
+invoked as [/nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/bin/.latexmlc-wrapped --split --splitat=section --timestamp=0 --navigationtoc=context --nocomments --javascript=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js?config=MML_HTMLorMML --destination=./paper.html ../1/conference_101719.tex]
+recursive processing started Tue Sep 23 19:04:21 2025
+(Digesting BibTeX references...
+(Processing content /home/santhosh/Desktop/Projects/TypeScript/2025/1_Ayvu/ayvu/src/lib/data/paper/1/references.bib... 0.02 sec)
+(Preparsing Bibliography references... 0.03 sec)
+(Processing content Literal String...
+Error:undefined:\url The token T_CS[\url] is not defined.
+	at String; line 30 col 0 - line 30 col 37
+	Defining it now as <ltx:ERROR/>
+	Next token is T_BEGIN[{] ( == T_BEGIN[{])
+	In Core::Gullet[@0x2cb08f80] Literal String; from line 30 col 0 to line 30 col 37
+	 <= Core::Stomach[@0x2d0b66c0] <= Core::Definition::Constructor[\bib@@f... <= Core::Stomach[@0x2d0b66c0] <= ...
+ 3.14 sec) 3.20 sec)
+(Building...
+(Loading compiled schema /nix/store/8jl3cq3xy3px81fnyv1cmjbl0c3krmx8-perl5.40.0-LaTeXML-0.8.8/lib/perl5/site_perl/5.40.0/LaTeXML/resources/RelaxNG/LaTeXML.model... 0.02 sec) 1.55 sec)
+(Rewriting... 0.00 sec)
+(Finalizing... 0.08 sec)
+recursive Conversion complete: 1 error; 1 undefined macro[\url] (See /home/santhosh/Desktop/Projects/TypeScript/2025/1_Ayvu/ayvu/src/lib/data/paper/html/conference_101719.latexml.log)
+Status:conversion:2
+ 5.64 sec)
+MakeBibliography: using bibliographies references]
+MakeBibliography: 77 bibentries, 21 cited
+Scan: DBStatus: 341/0 objects
+ 5.81 sec)
+(CrossRef paper.html processing... 0.02 sec)
+(CrossRef S1.html processing... 0.02 sec)
+(CrossRef S2.html processing... 0.02 sec)
+(CrossRef S3.html processing... 0.02 sec)
+(CrossRef S4.html processing... 0.03 sec)
+(CrossRef S5.html processing... 0.04 sec)
+(CrossRef S6.html processing... 0.02 sec)
+(CrossRef S7.html processing... 0.02 sec)
+(CrossRef S8.html processing... 0.02 sec)
+(CrossRef bib.html processing... 0.05 sec)
+(Graphics S4.html 3 to process... 4.68 sec)
+(Graphics S5.html 9 to process... 19.10 sec)
+(MathML::Presentation S5.html 3 to process...
+converted 3 Maths
+ 0.00 sec)
+(XSLT[using LaTeXML-html5.xsl] paper.html processing... 0.01 sec)
+(XSLT[using LaTeXML-html5.xsl] S1.html processing... 0.01 sec)
+(XSLT[using LaTeXML-html5.xsl] S2.html processing... 0.01 sec)
+(XSLT[using LaTeXML-html5.xsl] S3.html processing... 0.01 sec)
+(XSLT[using LaTeXML-html5.xsl] S4.html processing... 0.02 sec)
+(XSLT[using LaTeXML-html5.xsl] S5.html processing... 0.04 sec)
+(XSLT[using LaTeXML-html5.xsl] S6.html processing... 0.01 sec)
+(XSLT[using LaTeXML-html5.xsl] S7.html processing... 0.00 sec)
+(XSLT[using LaTeXML-html5.xsl] S8.html processing... 0.01 sec)
+(XSLT[using LaTeXML-html5.xsl] bib.html processing... 0.02 sec)
+(Writer paper.html processing... 0.00 sec)
+(Writer S1.html processing... 0.00 sec)
+(Writer S2.html processing... 0.00 sec)
+(Writer S3.html processing... 0.00 sec)
+(Writer S4.html processing... 0.00 sec)
+(Writer S5.html processing... 0.00 sec)
+(Writer S6.html processing... 0.00 sec)
+(Writer S7.html processing... 0.00 sec)
+(Writer S8.html processing... 0.00 sec)
+(Writer bib.html processing... 0.00 sec) 30.10 sec)
+Post-processing complete: 1 error; 1 undefined macro[\url] (See /home/santhosh/Desktop/Projects/TypeScript/2025/1_Ayvu/ayvu/src/lib/data/paper/html/conference_101719.latexml.log)
+processing finished Tue Sep 23 19:04:50 2025
+Status:conversion:2

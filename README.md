@@ -145,3 +145,11 @@ All features are fully tested with unit and integration tests following the docu
 ## License
 
 This project is part of a capstone project for academic purposes.
+
+pandoc paper.html -f raw_html -t gfm -o ../markdown/paper.md --extract-media=../markdown/media --strip-comments --resource-path=.
+
+latexmlc --format=html5 --destination=./paper.html ../2/main.tex 
+
+latexmlc --split --splitat=section --timestamp=0 --navigationtoc=context --nocomments --javascript="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js?config=MML_HTMLorMML" --destination=./paper.html ../1/conference_101719.tex 
+
+https://hackmd.io/@UoL-IWG/latexml
