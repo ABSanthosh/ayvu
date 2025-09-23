@@ -46,9 +46,9 @@ body {
 	// margin: 0;
 	width: 100%;
 	overflow-x: hidden;
-	margin: var(--line-height) 2ch;
+	padding: var(--line-height) 2ch;
 	line-height: var(--line-height);
-	max-width: calc(min(80ch, round(down, 100%, 1ch)));
+	max-width: 1024px;
 }
 
 a {

@@ -4,11 +4,10 @@
 
 	const { user }: { user: User } = getContext('user');
 	let isMenuOpen = $state(false);
-
 </script>
 
 <nav class="Header">
-	<h2>Ayvu</h2>
+	<h2>ayvu</h2>
 	<ul class="Header__nav">
 		<li>
 			<a href="features">Features</a>
@@ -37,7 +36,10 @@
 		}
 
 		h2 {
+			font-size: 32px;
+			font-weight: 500;
 			user-select: none;
+			font-family: 'Editorial New', serif;
 			@include respondAt(400px) {
 				margin-right: auto;
 			}
