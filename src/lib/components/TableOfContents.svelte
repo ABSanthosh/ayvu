@@ -160,12 +160,13 @@
 
 <style lang="scss">
 	.toc {
-		position: sticky;
+		position: fixed;
+		left: 10px;
 		top: 20px;
 		background: var(--background);
 		border: var(--border-thickness) solid var(--foreground-secondary);
 		border-radius: 8px;
-		padding: 16px;
+		padding: 16px 10px 16px 16px;
 		max-height: calc(100vh - 40px);
 		overflow-y: auto;
 		min-width: 280px;
@@ -223,8 +224,9 @@
 		}
 
 		&__nav {
-			max-height: calc(100vh - 120px);
 			overflow-y: auto;
+			padding-right: 9px;
+			max-height: calc(100vh - 120px);
 
 			@include respondAt(768px) {
 				max-height: none;
