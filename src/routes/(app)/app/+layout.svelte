@@ -13,13 +13,13 @@
 </script>
 
 <svelte:head>
-	<title>Ayvu</title>
+	<title>ayvu</title>
 </svelte:head>
 
 <nav class="AppHeader">
 	<ul class="AppHeader__nav">
 		<h2>
-			<a href="/"> Ayvu </a>
+			<a href="/"> ayvu </a>
 		</h2>
 		<li>
 			<a href="/app" data-active={data.pageTitle === 'Your Reads'}>Your Reads</a>
@@ -85,6 +85,13 @@
 				margin-right: 10px;
 				text-decoration: none;
 				color: var(--foreground);
+
+				font-size: 32px;
+				font-weight: 500;
+				font-family: 'Editorial New', serif;
+				@include respondAt(400px) {
+					margin-right: auto;
+				}
 			}
 
 			li {

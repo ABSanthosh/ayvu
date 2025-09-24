@@ -9,30 +9,61 @@
 	let showModal = $state(false);
 	let formLoading = $state(false);
 	let formErrors = $state({
-		title: '',
-		authors: '',
-		publishedOn: '',
-		abstract: '',
-		pdf: ''
+		arxivUrl: ''
+	});
+	let formElement: HTMLFormElement;
+
+	// Reset form when modal closes
+	$effect(() => {
+		if (!showModal) {
+			formErrors = { arxivUrl: '' };
+			if (formElement) {
+				formElement.reset();
+			}
+		}
 	});
 
 </script>
 
 <div class="Toolbar">
-	<button class="CrispButton" onclick={() => (showModal = true)}> Add Entry </button>
+	<button class="CrispButton" onclick={() => {
+		showModal = true;
+		// Reset form errors when opening modal
+		formErrors = { arxivUrl: '' };
+	}}> Add Entry </button>
 </div>
 <main class="Papers">
 	<Modal bind:showModal header="Add Entry">
 		<form
+			bind:this={formElement}
 			use:enhance={() => {
 				formLoading = true;
+				// Clear any existing errors when submitting
+				formErrors = { arxivUrl: '' };
 
 				return async ({ update, result }) => {
+					console.log('Form result:', result); // Debug log
+					
 					// @ts-ignore
-					// console.log(result, ...result.data.error);
-					if (result.status === 406) {
+					if (result.type === 'failure') {
 						// @ts-ignore
-						formErrors = { ...formErrors, ...result.data.error };
+						if (result.data?.error) {
+							// @ts-ignore
+							formErrors = { ...result.data.error };
+						}
+					} else if (result.type === 'success') {
+						// @ts-ignore
+						if (result.data?.success) {
+							// Success! Close modal and reset form
+							formErrors = { arxivUrl: '' };
+							if (formElement) {
+								formElement.reset();
+							}
+							showModal = false;
+						}
+					} else {
+						// Handle any other unexpected result types
+						console.error('Unexpected result type:', result.type);
 					}
 
 					formLoading = false;
@@ -42,61 +73,37 @@
 			method="POST"
 			action="/app?/createEntry"
 			class="Papers__newEntryForm"
-			enctype="multipart/form-data"
 		>
 			<label class="CrispLabel" data-justify="space-between">
-				<span data-mandatory style="color: inherit;"> Title </span>
-				<input type="text" class="CrispInput" name="title" id="title" required />
-				{#if formErrors.title !== ''}
+				<span data-mandatory style="color: inherit;"> arXiv URL </span>
+				<input 
+					type="url" 
+					class="CrispInput" 
+					name="arxivUrl" 
+					id="arxivUrl" 
+					placeholder="https://arxiv.org/abs/2411.11908"
+					required 
+					disabled={formLoading}
+				/>
+				{#if formErrors.arxivUrl !== ''}
 					<span class="CrispMessage" data-type="error">
-						{formErrors.title}
+						{formErrors.arxivUrl}
 					</span>
 				{/if}
 			</label>
 
-			<label class="CrispLabel" data-justify="space-between">
-				<span data-mandatory style="color: inherit;"> Authors (comma separated names) </span>
-				<input type="text" class="CrispInput" name="authors" id="authors" required />
-				{#if formErrors.authors !== ''}
-					<span class="CrispMessage" data-type="error">
-						{formErrors.authors}
-					</span>
+			<button 
+				class="CrispButton" 
+				style="margin-left: auto;" 
+				data-type="invert" 
+				type="submit"
+				disabled={formLoading}
+			>
+				{#if formLoading}
+					Fetching Paper...
+				{:else}
+					Add Paper
 				{/if}
-			</label>
-
-			<label class="CrispLabel" data-justify="space-between">
-				<span data-mandatory style="color: inherit;"> Published Month </span>
-				<input type="month" class="CrispInput" name="publishedOn" id="publishedOn" required />
-				{#if formErrors.publishedOn !== ''}
-					<span class="CrispMessage" data-type="error">
-						{formErrors.publishedOn}
-					</span>
-				{/if}
-			</label>
-
-			<label class="CrispLabel" data-justify="space-between">
-				<span data-mandatory style="color: inherit;"> Abstract </span>
-				<textarea class="CrispInput" style="resize: none;" name="abstract" id="abstract" required
-				></textarea>
-				{#if formErrors.abstract !== ''}
-					<span class="CrispMessage" data-type="error">
-						{formErrors.abstract}
-					</span>
-				{/if}
-			</label>
-
-			<label class="CrispLabel" data-justify="space-between">
-				<span data-mandatory style="color: inherit;"> Paper PDF </span>
-				<input type="file" class="CrispInput" name="pdf" id="pdf" accept=".pdf" required />
-				{#if formErrors.pdf !== ''}
-					<span class="CrispMessage" data-type="error">
-						{formErrors.pdf}
-					</span>
-				{/if}
-			</label>
-
-			<button class="CrispButton" style="margin-left: auto;" data-type="invert" type="submit">
-				Submit
 			</button>
 		</form>
 	</Modal>
@@ -139,7 +146,7 @@
 			gap: 20px;
 			padding: 7px 20px 20px 20px;
 			@include box();
-			min-width: 390px;
+			min-width: 320px;
 			@include make-flex();
 
 			@include respondAt(470px) {
