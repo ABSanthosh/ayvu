@@ -22,6 +22,7 @@ A SvelteKit application for reading and managing research papers from arXiv with
 ## Development
 
 ### Prerequisites
+
 - Node.js 18+
 - npm or pnpm
 - Google OAuth credentials
@@ -43,6 +44,7 @@ cp .env.example .env
 ```
 
 ### Environment Variables
+
 ```env
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
@@ -76,6 +78,7 @@ npm run test:coverage
 ```
 
 **Test Coverage**: 41/44 tests passing with comprehensive coverage of:
+
 - Authentication flows
 - Google Drive integration
 - Database operations
@@ -124,6 +127,7 @@ src/
 ## Sprint 1 Implementation
 
 This implementation covers all Sprint 1 user stories:
+
 - **US-1**: Sign in with Google
 - **US-2**: Grant Drive Permissions
 - **US-3**: Create Drive Folder
@@ -148,8 +152,8 @@ This project is part of a capstone project for academic purposes.
 
 pandoc paper.html -f raw_html -t gfm -o ../markdown/paper.md --extract-media=../markdown/media --strip-comments --resource-path=.
 
-latexmlc --format=html5 --destination=./paper.html ../2/main.tex 
+latexmlc --format=html5 --destination=./paper.html ../2/main.tex
 
-latexmlc --split --splitat=section --timestamp=0 --navigationtoc=context --nocomments --javascript="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js?config=MML_HTMLorMML" --destination=./paper.html ../1/conference_101719.tex 
+latexmlc --split --splitat=section --timestamp=0 --navigationtoc=context --nocomments --javascript="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js?config=MML_HTMLorMML" --destination=./paper.html ../1/conference_101719.tex
 
 https://hackmd.io/@UoL-IWG/latexml

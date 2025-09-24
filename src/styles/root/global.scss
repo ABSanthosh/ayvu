@@ -9,6 +9,16 @@
 @use '../Crisp/CrispButton.scss' as *;
 @use '../Crisp/CrispMessage.scss' as *;
 
+@use '../reader/index.scss' as *;
+
+// .ltx_page_main {
+// 	& > * {
+// 		// text-align: justify;
+// 		font-size: 22px;
+// 		line-height: 140%;
+// 	}
+// }
+
 * {
 	&:hover {
 		transition: color 0.2s ease-in-out;

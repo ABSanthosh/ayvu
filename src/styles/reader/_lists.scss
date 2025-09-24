@@ -1,0 +1,23 @@
+@import 'fonts';
+
+@mixin list() {
+	margin: 1em 0;
+	padding-left: 2.5em;
+
+	// Ensure bullets and numbers are in predictable style.
+	@include font-body();
+
+	@include media('<tablet') {
+		padding-left: .5em;
+	}
+
+	@include media('<desktop') {
+		padding-left: 1em;
+	}
+
+	& > li {
+		gap: 15px;
+		display: inline-flex;
+		padding-left: 0.5em;
+	}
+}

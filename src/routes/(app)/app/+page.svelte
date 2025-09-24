@@ -22,15 +22,19 @@
 			}
 		}
 	});
-
 </script>
 
 <div class="Toolbar">
-	<button class="CrispButton" onclick={() => {
-		showModal = true;
-		// Reset form errors when opening modal
-		formErrors = { arxivUrl: '' };
-	}}> Add Entry </button>
+	<button
+		class="CrispButton"
+		onclick={() => {
+			showModal = true;
+			// Reset form errors when opening modal
+			formErrors = { arxivUrl: '' };
+		}}
+	>
+		Add Entry
+	</button>
 </div>
 <main class="Papers">
 	<Modal bind:showModal header="Add Entry">
@@ -42,8 +46,6 @@
 				formErrors = { arxivUrl: '' };
 
 				return async ({ update, result }) => {
-					console.log('Form result:', result); // Debug log
-					
 					// @ts-ignore
 					if (result.type === 'failure') {
 						// @ts-ignore
@@ -76,13 +78,13 @@
 		>
 			<label class="CrispLabel" data-justify="space-between">
 				<span data-mandatory style="color: inherit;"> arXiv URL </span>
-				<input 
-					type="url" 
-					class="CrispInput" 
-					name="arxivUrl" 
-					id="arxivUrl" 
+				<input
+					type="url"
+					class="CrispInput"
+					name="arxivUrl"
+					id="arxivUrl"
 					placeholder="https://arxiv.org/abs/2411.11908"
-					required 
+					required
 					disabled={formLoading}
 				/>
 				{#if formErrors.arxivUrl !== ''}
@@ -92,10 +94,10 @@
 				{/if}
 			</label>
 
-			<button 
-				class="CrispButton" 
-				style="margin-left: auto;" 
-				data-type="invert" 
+			<button
+				class="CrispButton"
+				style="margin-left: auto;"
+				data-type="invert"
 				type="submit"
 				disabled={formLoading}
 			>

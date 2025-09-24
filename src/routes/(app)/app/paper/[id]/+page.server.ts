@@ -1,10 +1,60 @@
 import type { PageServerLoad } from './$types';
+import { getFilesFromFolder, getFileContent } from '$lib/drive';
+import {
+	processHtmlImages,
+	extractTableOfContents,
+	processInlineStyles
+} from '$lib/utils/drive-image';
+import { error } from '@sveltejs/kit';
 
-export const load: PageServerLoad = async ({ params }) => {
-	
-	
-	
-	return {
-		paperId: params.id
-	};
+export const load: PageServerLoad = async ({ params, parent }) => {
+	const { user } = await parent();
+
+	if (!user) {
+		throw error(401, 'Unauthorized');
+	}
+
+	try {
+		// Get files from the .ayvu folder with the paper ID
+		const driveFileMap = await getFilesFromFolder(params.id, user.accessToken, user.refreshToken);
+
+		// Get the HTML content from paper.html
+		const htmlFileId = driveFileMap['paper.html'];
+		if (!htmlFileId) {
+			throw error(404, 'paper.html not found in the folder');
+		}
+
+		let htmlContent = await getFileContent(htmlFileId, user.accessToken, user.refreshToken);
+
+		// Process HTML to replace image sources and CSS links with Google Drive URLs
+		htmlContent = processHtmlImages(htmlContent, driveFileMap);
+		htmlContent = processInlineStyles(htmlContent);
+
+		// Extract table of contents and remove it from HTML
+		const { toc, htmlContent: cleanedHtmlContent } = extractTableOfContents(htmlContent);
+
+		return {
+			paperId: params.id,
+			htmlContent: cleanedHtmlContent,
+			toc
+		};
+	} catch (err) {
+		console.error('Error loading paper:', err);
+
+		// Provide more specific error messages based on the error type
+		if (err instanceof Error) {
+			if (err.message.includes('not found')) {
+				throw error(404, `Paper folder or files not found: ${err.message}`);
+			} else if (err.message.includes('permission') || err.message.includes('access')) {
+				throw error(403, `Access denied to Google Drive files: ${err.message}`);
+			} else if (err.message.includes('quota') || err.message.includes('limit')) {
+				throw error(429, `Google Drive API quota exceeded: ${err.message}`);
+			}
+		}
+
+		throw error(
+			500,
+			`Failed to load paper: ${err instanceof Error ? err.message : 'Unknown error'}`
+		);
+	}
 };

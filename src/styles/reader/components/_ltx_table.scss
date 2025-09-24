@@ -1,0 +1,14 @@
+.ltx_table {
+  margin-top: 4rem;
+  margin-bottom: 4rem;
+
+  max-width: 100%;
+  overflow-x: auto;
+
+  .ltx_caption {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1em;
+  }
+}

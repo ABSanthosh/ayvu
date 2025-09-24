@@ -36,7 +36,7 @@ const authentication: Handle = async ({ event, resolve }) => {
 					expiry_date: user.expiryDate
 				});
 				const { credentials } = await client.refreshAccessToken();
-				console.log(credentials);
+
 				await updateUserTokens({
 					googleId: user.googleId,
 					accessToken: credentials.access_token!,

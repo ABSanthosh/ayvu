@@ -7,6 +7,7 @@ interface GoogleDriveService {
 	files: {
 		create: Function;
 		list: Function;
+		get: Function;
 	};
 	permissions: {
 		create: Function;
@@ -25,10 +26,10 @@ const initializeDriveService = async (
 ): Promise<GoogleDriveService> => {
 	const client = new OAuth2Client(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI);
 	client.setCredentials({
-		access_token,
+		access_token
 		// refresh_token
-	})
-  // client.getAccessToken()
+	});
+	// client.getAccessToken()
 	return google.drive({ version: 'v3', auth: client });
 };
 
@@ -46,7 +47,7 @@ const findFolder = async (
 
 		const response = await service.files.list({
 			q: query,
-			fields: 'files(id)'
+			fields: 'files(id, name)'
 		});
 
 		const files = response.data.files;
@@ -196,6 +197,74 @@ export const uploadPdf = async (
 		return fileId;
 	} catch (error) {
 		console.error('Error in uploadPdf:', error);
+		throw error;
+	}
+};
+
+// Get files from a specific folder
+export const getFilesFromFolder = async (
+	folderName: string,
+	access_token: string,
+	refresh_token: string
+): Promise<{ [filename: string]: string }> => {
+	try {
+		// Initialize service
+		const service = await initializeDriveService(refresh_token, access_token);
+
+		// Find .ayvu folder
+		const ayvuFolderId = await findFolder(service, '.ayvu');
+		if (!ayvuFolderId) {
+			throw new Error('.ayvu folder not found');
+		}
+
+		// Find the specific folder inside .ayvu
+		const targetFolderId = await findFolder(service, folderName, ayvuFolderId);
+
+		if (!targetFolderId) {
+			throw new Error(`Folder ${folderName} not found in .ayvu`);
+		}
+
+		// List all files in the folder
+		const response = await service.files.list({
+			q: `'${targetFolderId}' in parents and trashed=false`,
+			fields: 'files(id, name)'
+		});
+
+		const files = response.data.files || [];
+		const fileMap: { [filename: string]: string } = {};
+
+		files.forEach((file: any) => {
+			if (file.name && file.id) {
+				fileMap[file.name] = file.id;
+			}
+		});
+
+		return fileMap;
+	} catch (error) {
+		console.error('Error getting files from folder:', error);
+		throw error;
+	}
+};
+
+// Get HTML content from a specific file
+export const getFileContent = async (
+	fileId: string,
+	access_token: string,
+	refresh_token: string
+): Promise<string> => {
+	try {
+		// Initialize service
+		const service = await initializeDriveService(refresh_token, access_token);
+
+		// Get file content
+		const response = await service.files.get({
+			fileId: fileId,
+			alt: 'media'
+		});
+
+		return response.data;
+	} catch (error) {
+		console.error('Error getting file content:', error);
 		throw error;
 	}
 };
