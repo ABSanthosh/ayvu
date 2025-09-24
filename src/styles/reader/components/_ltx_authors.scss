@@ -1,29 +1,48 @@
-@import "../fonts";
+@import '../fonts';
 
 .ltx_authors {
-  @include font-body();
+	@include font-body();
 
-  margin-bottom: 1em;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-evenly;
 
-  .ltx_personname {
-    font-weight: bold;
+	margin-bottom: 1em;
 
-    // In case of multiple notes per author, separate them with comma.
-    .ltx_note_mark:not(:last-child):after {
-      content: ",";
-    }
+	gap: 20px;
 
-  }
+	@include media('>=desktop', '<huge') {
+		gap: 30px;
+	}
 
-  // No spaces between authors
-  .ltx_author_before {
-    display: none;
-  }
+	@include media('>=huge') {
+		gap: 50px;
+	}
 
-  .ltx_creator,
-  .ltx_author_after,
-  .ltx_author_notes,
-  .ltx_author_notes .ltx_contact {
-    display: block;
-  }
+	.ltx_personname {
+		font-weight: bold;
+
+		// In case of multiple notes per author, separate them with comma.
+		.ltx_note_mark:not(:last-child):after {
+			content: ',';
+		}
+	}
+
+	// No spaces between authors
+	.ltx_break,
+	.ltx_author_before {
+		display: none;
+	}
+
+	.ltx_creator,
+	.ltx_author_after,
+	.ltx_author_notes,
+	.ltx_author_notes .ltx_contact {
+		// display: block;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 5px;
+	}
 }
