@@ -1,5 +1,6 @@
 <script lang="ts">
 	let {
+		id,
 		type,
 		title,
 		authors,
@@ -7,6 +8,7 @@
 		abstract,
 		preview: previewUrl
 	}: {
+		id: string;
 		type: 'Desc' | 'No-Preview' | 'Table';
 		title: string;
 		authors: string[];
@@ -19,7 +21,7 @@
 </script>
 
 {#snippet Content(title: string, authors: any[], published: string)}
-	<a class="PaperCard__title" href="/">
+	<a class="PaperCard__title" href="/app/paper/{id}">
 		<h2>{title}</h2>
 	</a>
 	<p class="PaperCard__meta">
