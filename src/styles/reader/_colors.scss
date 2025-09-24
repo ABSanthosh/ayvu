@@ -1,7 +1,5 @@
 // Don't use alpha, because borders mix together
-$borderColor: black;
-$lightBorderColor: lighten(black, 50%);
-
+$borderColor: var(--border);
+$lightBorderColor: var(--border);
 $secondaryBackground: darken(white, 5%);
-
 $linkColor: #7c7ec1;
