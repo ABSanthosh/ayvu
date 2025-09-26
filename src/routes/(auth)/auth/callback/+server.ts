@@ -39,6 +39,24 @@ export async function GET({ url, cookies }) {
 			secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
 			maxAge: 60 * 60 * 24 * 7 // 1 week expiration
 		});
+
+		// Store access token for API authentication (for private image access)
+		cookies.set('google_access_token', client.credentials.access_token!, {
+			httpOnly: true,
+			path: '/',
+			secure: process.env.NODE_ENV === 'production',
+			maxAge: 3600 // 1 hour (Google access tokens typically expire in 1 hour)
+		});
+
+		// Optional: Store refresh token for token renewal (be very careful with this)
+		if (client.credentials.refresh_token) {
+			cookies.set('google_refresh_token', client.credentials.refresh_token, {
+				httpOnly: true,
+				path: '/',
+				secure: process.env.NODE_ENV === 'production',
+				maxAge: 60 * 60 * 24 * 30 // 30 days
+			});
+		}
 	} catch (error) {
 		console.error(error);
 		return redirect(303, '/?error=Failed%20to%20authenticate');

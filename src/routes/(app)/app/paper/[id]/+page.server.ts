@@ -28,7 +28,8 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 		let htmlContent = await getFileContent(htmlFileId.id, user.accessToken, user.refreshToken);
 
 		// Process HTML to replace image sources and CSS links with Google Drive URLs
-		htmlContent = processHtmlImages(htmlContent, driveFileMap);
+		// Use authenticated endpoints for private images
+		htmlContent = processHtmlImages(htmlContent, driveFileMap, true);
 		htmlContent = processHtmlCssLinks(htmlContent);
 		htmlContent = processInlineStyles(htmlContent);
 

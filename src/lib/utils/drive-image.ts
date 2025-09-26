@@ -25,9 +25,20 @@ export default function getImageSrc(url: string): string {
 }
 
 /**
- * Process HTML content to replace image sources with Google Drive URLs
+ * Creates an authenticated Google Drive image URL using your app's API endpoint
+ * @param fileId - The Google Drive file ID
+ * @param size - Optional size parameter (e.g., 's4000', 's1600')
+ * @returns URL to your authenticated image endpoint
+ */
+export function getAuthenticatedImageSrc(fileId: string, size = 's4000'): string {
+	return `/api/drive-image/${fileId}?sz=${size}`;
+}
+
+/**
+ * Process HTML content to replace image sources with authenticated Google Drive URLs
  * @param htmlContent - The HTML content to process
  * @param driveFileMap - Map of filename to Google Drive file ID
+ * @param useAuthenticated - Whether to use authenticated endpoints (default: true)
  * @returns Processed HTML content with updated image sources
  */
 export function processHtmlImages(
@@ -38,7 +49,8 @@ export function processHtmlImages(
 			id: string;
 			thumbnailLink?: string;
 		}
-	>
+	>,
+	useAuthenticated = true
 ): string {
 	// Replace image src attributes
 	return htmlContent.replace(
@@ -54,12 +66,19 @@ export function processHtmlImages(
 
 			// If we have a Google Drive file ID for this filename, replace it
 			if (driveFileMap[filename]) {
-				// const driveUrl = `https://drive.google.com/file/d/${driveFileMap[filename]}/view`;
-				// const thumbnailUrl = getImageSrc(driveUrl);
-				const thumbnailUrl = driveFileMap[filename].thumbnailLink
-					? driveFileMap[filename].thumbnailLink.replace(/=s\d+/, '=s4000')
-					: `https://drive.google.com/thumbnail?id=${driveFileMap[filename].id}&sz=s4000`;
-				return `<img${beforeSrc} src="${thumbnailUrl}"${afterSrc}>`;
+				let imageUrl: string;
+				
+				if (useAuthenticated) {
+					// Use authenticated endpoint
+					imageUrl = getAuthenticatedImageSrc(driveFileMap[filename].id);
+				} else {
+					// Use public thumbnail (may not work for private files)
+					imageUrl = driveFileMap[filename].thumbnailLink
+						? driveFileMap[filename].thumbnailLink!.replace(/=s\d+/, '=s4000')
+						: `https://drive.google.com/thumbnail?id=${driveFileMap[filename].id}&sz=s4000`;
+				}
+				
+				return `<img${beforeSrc} src="${imageUrl}"${afterSrc}>`;
 			}
 
 			// Log missing files for debugging
@@ -67,6 +86,103 @@ export function processHtmlImages(
 			return match;
 		}
 	);
+}
+
+/**
+ * Fallback function for when server-side authenticated images aren't available
+ * Creates a direct authenticated fetch for images on the client side
+ * @param fileId - Google Drive file ID
+ * @param accessToken - User's access token
+ * @returns Promise with blob URL or null if failed
+ */
+export async function fetchAuthenticatedImageBlob(
+	fileId: string, 
+	accessToken: string
+): Promise<string | null> {
+	try {
+		// Use Google Drive API directly with access token
+		const response = await fetch(
+			`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
+			{
+				headers: {
+					'Authorization': `Bearer ${accessToken}`,
+					'Accept': 'image/*'
+				}
+			}
+		);
+		
+		if (!response.ok) {
+			throw new Error(`Failed to fetch image: ${response.status}`);
+		}
+		
+		const blob = await response.blob();
+		
+		// Create a blob URL for the image
+		const blobUrl = URL.createObjectURL(blob);
+		
+		// Note: Remember to revoke blob URLs when no longer needed to prevent memory leaks
+		// URL.revokeObjectURL(blobUrl);
+		
+		return blobUrl;
+	} catch (error) {
+		console.error('Error fetching authenticated image:', error);
+		return null;
+	}
+}
+
+/**
+ * Client-side function to replace image sources with authenticated blob URLs
+ * Use this when server-side proxy is not available
+ * @param element - HTML element containing images
+ * @param driveFileMap - Map of filenames to Drive file IDs
+ * @param accessToken - User's access token
+ */
+export async function replaceImagesWithAuthenticatedBlobs(
+	element: HTMLElement,
+	driveFileMap: Record<string, { id: string; thumbnailLink?: string }>,
+	accessToken: string
+): Promise<void> {
+	const images = element.querySelectorAll('img');
+	
+	const promises = Array.from(images).map(async (img) => {
+		const src = img.getAttribute('src');
+		if (!src || src.startsWith('http://') || src.startsWith('https://')) {
+			return; // Skip already processed images
+		}
+		
+		const filename = src.split('/').pop()?.split('?')[0];
+		if (!filename || !driveFileMap[filename]) {
+			return; // Skip if no Drive mapping
+		}
+		
+		const fileId = driveFileMap[filename].id;
+		const blobUrl = await fetchAuthenticatedImageBlob(fileId, accessToken);
+		
+		if (blobUrl) {
+			img.src = blobUrl;
+			
+			// Store the blob URL for cleanup later if needed
+			img.dataset.blobUrl = blobUrl;
+		}
+	});
+	
+	await Promise.all(promises);
+}
+
+/**
+ * Clean up blob URLs to prevent memory leaks
+ * @param element - HTML element containing images with blob URLs
+ */
+export function cleanupBlobUrls(element: HTMLElement): void {
+	const images = element.querySelectorAll('img[data-blob-url]');
+	images.forEach((img: Element) => {
+		const htmlImg = img as HTMLImageElement;
+		const blobUrl = htmlImg.dataset.blobUrl;
+		if (blobUrl) {
+			URL.revokeObjectURL(blobUrl);
+			delete htmlImg.dataset.blobUrl;
+		}
+	});
 }
 
 export function processInlineStyles(htmlContent: string): string {
