@@ -13,6 +13,8 @@ export const actions: Actions = {
 				'https://www.googleapis.com/auth/userinfo.email',
 				'https://www.googleapis.com/auth/userinfo.profile',
 				// 'https://www.googleapis.com/auth/drive.file',
+				// https://developers.google.com/workspace/drive/api/guides/appdata
+				// https://www.googleapis.com/auth/drive.appdata,
 				'https://www.googleapis.com/auth/drive'
 			],
 			prompt: 'consent'

@@ -3,7 +3,8 @@ import { getFilesFromFolder, getFileContent } from '$lib/drive';
 import {
 	processHtmlImages,
 	extractTableOfContents,
-	processInlineStyles
+	processInlineStyles,
+	processHtmlCssLinks
 } from '$lib/utils/drive-image';
 import { error } from '@sveltejs/kit';
 
@@ -24,10 +25,11 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 			throw error(404, 'paper.html not found in the folder');
 		}
 
-		let htmlContent = await getFileContent(htmlFileId, user.accessToken, user.refreshToken);
+		let htmlContent = await getFileContent(htmlFileId.id, user.accessToken, user.refreshToken);
 
 		// Process HTML to replace image sources and CSS links with Google Drive URLs
 		htmlContent = processHtmlImages(htmlContent, driveFileMap);
+		htmlContent = processHtmlCssLinks(htmlContent);
 		htmlContent = processInlineStyles(htmlContent);
 
 		// Extract table of contents and remove it from HTML

@@ -206,7 +206,12 @@ export const getFilesFromFolder = async (
 	folderName: string,
 	access_token: string,
 	refresh_token: string
-): Promise<{ [filename: string]: string }> => {
+): Promise<{
+	[filename: string]: {
+		id: string;
+		thumbnailLink?: string;
+	};
+}> => {
 	try {
 		// Initialize service
 		const service = await initializeDriveService(refresh_token, access_token);
@@ -227,15 +232,20 @@ export const getFilesFromFolder = async (
 		// List all files in the folder
 		const response = await service.files.list({
 			q: `'${targetFolderId}' in parents and trashed=false`,
-			fields: 'files(id, name)'
+			fields: 'files(id, name, thumbnailLink)'
 		});
 
+		console.log('Files in folder response:', response.data);
+
 		const files = response.data.files || [];
-		const fileMap: { [filename: string]: string } = {};
+		const fileMap: { [filename: string]: { id: string; thumbnailLink?: string } } = {};
 
 		files.forEach((file: any) => {
 			if (file.name && file.id) {
-				fileMap[file.name] = file.id;
+				fileMap[file.name] = {
+					id: file.id as string,
+					thumbnailLink: file.thumbnailLink as string
+				};
 			}
 		});
 
@@ -268,3 +278,31 @@ export const getFileContent = async (
 		throw error;
 	}
 };
+
+export function getFileWebViewLink(
+	fileId: string,
+	access_token: string,
+	refresh_token: string
+): Promise<string> {
+	return new Promise(async (resolve, reject) => {
+		try {
+			// Initialize service
+			const service = await initializeDriveService(refresh_token, access_token);
+
+			// Get file metadata to retrieve webViewLink
+			const response = await service.files.get({
+				fileId: fileId,
+				fields: 'webViewLink'
+			});
+
+			if (response.data.webViewLink) {
+				resolve(response.data.webViewLink);
+			} else {
+				reject('webViewLink not found');
+			}
+		} catch (error) {
+			console.error('Error getting file webViewLink:', error);
+			reject(error);
+		}
+	});
+}
