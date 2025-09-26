@@ -1,4 +1,4 @@
-@import "../fonts";
+@use "../fonts" as *;
 
 // Bold, same size as body text, but in-line with the text. Like:
 // *Some heading.* A paragraph following it.

@@ -1,4 +1,4 @@
-@import "../fonts";
+@use "../fonts" as *;
 
 .ltx_caption {
   @include font-caption();

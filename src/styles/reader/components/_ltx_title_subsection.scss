@@ -1,4 +1,5 @@
-@import "../fonts";
+@use "../fonts" as *;
+@use "../include-media" as *;
 
 .ltx_title_subsection {
   @include font-heading-small();

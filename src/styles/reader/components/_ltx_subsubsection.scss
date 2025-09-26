@@ -1,4 +1,4 @@
-@import "../media";
+@use "../include-media" as *;
 
 .ltx_subsubsection {
   margin: 2em 0;

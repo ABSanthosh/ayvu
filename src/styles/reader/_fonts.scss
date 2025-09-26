@@ -1,4 +1,4 @@
-@import './media';
+@use "./include-media" as *;
 
 $rootFontFaceURL: 'https://cdn.jsdelivr.net/gh/arxiv-vanity/computer-modern@ec5980c33198e5c15debcae604bfff93fed5abf5';
 // FIXME: ideally this would be $fontDisplay, but percy produces indeterminate screenshots when that is the case

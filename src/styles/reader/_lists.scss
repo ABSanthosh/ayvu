@@ -1,4 +1,5 @@
-@import 'fonts';
+@use 'fonts' as *;
+@use "./include-media" as *;
 
 @mixin list() {
 	margin: 1em 0;

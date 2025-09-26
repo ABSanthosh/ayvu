@@ -1,4 +1,4 @@
-@import "../colors";
+@use "../colors" as *;
 
 .ltx_framed {
   border: 1px solid $borderColor;

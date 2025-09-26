@@ -1,5 +1,5 @@
-@import "../lists.scss";
+@use "../lists.scss";
 
 .ltx_itemize {
-  @include list();
+  @include lists.list();
 }

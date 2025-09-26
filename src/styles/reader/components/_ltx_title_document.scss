@@ -1,5 +1,5 @@
-@import "../fonts";
-@import "../media";
+@use "../fonts" as *;
+@use "../include-media" as *;
 
 .ltx_title_document {
   font-family: $fontFamilyComputerModern;

@@ -1,6 +1,6 @@
-@import '../fonts';
-@import '../media';
-@import './ltx_section';
+@use '../fonts' as *;
+@use "../include-media" as *;
+@use './ltx_section';
 
 .ltx_bibliography {
 	@extend .ltx_section;

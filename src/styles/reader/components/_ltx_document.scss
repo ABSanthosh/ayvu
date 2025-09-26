@@ -1,4 +1,4 @@
-@import "../media";
+@use "../include-media" as *;
 
 @mixin document-width($textWidth, $pageWidth) {
   width: $pageWidth;

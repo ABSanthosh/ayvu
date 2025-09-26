@@ -1,3 +1,5 @@
+@use "../fonts" as *;
+
 .ltx_para {
   @include font-body();
 

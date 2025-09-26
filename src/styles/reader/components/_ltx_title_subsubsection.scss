@@ -1,4 +1,4 @@
-@import "../fonts";
+@use "../fonts" as *;
 
 .ltx_title_subsubsection {
   @include font-body();
