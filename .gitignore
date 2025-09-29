@@ -28,3 +28,5 @@ drizzle
 .vscode
 ingest.sh
 _context.txt
+
+.context
