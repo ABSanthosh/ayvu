@@ -235,8 +235,6 @@ export const getFilesFromFolder = async (
 			fields: 'files(id, name, thumbnailLink)'
 		});
 
-		console.log('Files in folder response:', response.data);
-
 		const files = response.data.files || [];
 		const fileMap: { [filename: string]: { id: string; thumbnailLink?: string } } = {};
 

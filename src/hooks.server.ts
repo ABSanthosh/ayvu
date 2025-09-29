@@ -20,7 +20,7 @@ const authentication: Handle = async ({ event, resolve }) => {
 	const googleSub = event.cookies.get('session');
 	if (googleSub) {
 		const user = await getUserById(googleSub);
-
+		console.log(`?refresh_token=${encodeURIComponent(user.refreshToken)}&access_token=${encodeURIComponent(user.accessToken)}`);
 		if (user) {
 			event.locals.user = user;
 
@@ -35,6 +35,7 @@ const authentication: Handle = async ({ event, resolve }) => {
 					refresh_token: user.refreshToken,
 					expiry_date: user.expiryDate
 				});
+
 				const { credentials } = await client.refreshAccessToken();
 
 				await updateUserTokens({

@@ -157,3 +157,6 @@ latexmlc --format=html5 --destination=./paper.html ../2/main.tex
 latexmlc --split --splitat=section --timestamp=0 --navigationtoc=context --nocomments --javascript="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js?config=MML_HTMLorMML" --destination=./paper.html ../1/conference_101719.tex
 
 https://hackmd.io/@UoL-IWG/latexml
+
+
+- table captions are in the same line
