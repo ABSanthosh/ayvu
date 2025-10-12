@@ -11,17 +11,20 @@
 
 @use '../reader/index.scss' as *;
 
-// .ltx_page_main {
-// 	& > * {
-// 		// text-align: justify;
-// 		font-size: 22px;
-// 		line-height: 140%;
-// 	}
-// }
+::-webkit-scrollbar {
+	width: 5px;
+}
 
-* {
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--foreground-secondary);
+	border-radius: 3px;
+
 	&:hover {
-		transition: color 0.2s ease-in-out;
+		background: var(--foreground);
 	}
 }
 

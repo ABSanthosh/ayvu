@@ -6,37 +6,35 @@
 
 	let { data } = $props() as { data: PageData & { toc?: TocEntry[] } };
 
-	let isSidebarOpen = $state(false);
+	let isSidebarOpen = $state(true);
 </script>
 
 <main class="PaperPage">
-	<Sidebar isOpen={isSidebarOpen}>
-		<TableOfContents toc={data.toc} />
-	</Sidebar>
+	<TableOfContents toc={data.toc} isOpen={isSidebarOpen} />
 	<div class="paper-content">
 		<button
 			data-icon={isSidebarOpen ? 'side_navigation' : 'dock_to_right'}
 			aria-label="Toggle Menu"
 			class="CrispButton menu-button"
 			onclick={() => (isSidebarOpen = !isSidebarOpen)}
-		></button>
-		<!-- {@html data.htmlContent} -->
+		>
+		</button>
+		{@html data.htmlContent}
 	</div>
 </main>
 
 <style lang="scss">
 	.PaperPage {
-		// gap: 8px;
 		@include box();
-		padding: 0px 0;
-		overflow-y: auto;
-		position: relative;
+		padding: 0;
+		overflow: hidden;
 		@include make-flex($align: flex-start, $dir: row);
 	}
 
 	.paper-content {
-		padding: 20px;
-		@include box();
+		padding: 20px 8px 20px 20px;
+		flex: 1;
+		height: 100%;
 		overflow: hidden;
 		position: relative;
 		border-radius: 7px;
@@ -44,7 +42,15 @@
 		border: 1px solid var(--muted-separator);
 
 		& > :global(.ltx_page_main) {
+			height: 100%;
 			overflow-y: auto;
+			padding-right: 10px;
+		}
+		:global(.ltx_document) {
+			height: 100%;
+			overflow: hidden;
+			// margin: 0 auto;
+			max-width: 1024px;
 		}
 	}
 	.menu-button {

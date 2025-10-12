@@ -2,11 +2,7 @@
 	import type { TocEntry } from '$lib/types/Toc.type';
 	import { onMount } from 'svelte';
 
-	interface Props {
-		toc: TocEntry[];
-	}
-
-	let { toc }: Props = $props();
+	let { toc, isOpen = $bindable() }: { toc: TocEntry[]; isOpen: boolean } = $props();
 
 	let activeSection = $state('');
 	let tocContainer = $state<HTMLElement>();
@@ -103,22 +99,9 @@
 </script>
 
 {#if toc && toc.length > 0}
-	<aside class="toc" bind:this={tocContainer}>
+	<aside class="toc" bind:this={tocContainer} class:isOpen>
 		<div class="toc__header">
 			<h3>Contents</h3>
-			<button
-				class="toc__toggle"
-				onclick={() => (isExpanded = !isExpanded)}
-				aria-label={isExpanded ? 'Collapse contents' : 'Expand contents'}
-			>
-				<svg
-					viewBox="0 0 24 24"
-					class="toc__toggle-icon"
-					class:toc__toggle-icon--expanded={isExpanded}
-				>
-					<path d="M7 10l5 5 5-5z" />
-				</svg>
-			</button>
 		</div>
 
 		{#if isExpanded}
@@ -160,79 +143,57 @@
 
 <style lang="scss">
 	.toc {
-		position: sticky;
-		// left: 10px;
-		top: 0px;
-		// background: var(--background);
-		background-color: #000;
-		align-self: flex-start;
-		// border: var(--border-thickness) solid var(--foreground-secondary);
+		@include box(0);
+		flex-shrink: 0;
 		border-radius: 8px;
-		padding: 16px 10px 16px 0px;
-		max-height: calc(100vh - 40px);
-		overflow-y: auto;
-		min-width: 280px;
-		max-width: 320px;
+		background-color: #000;
+		@include make-flex($dir: column, $just: flex-start, $align: flex-start);
+		transition: all 0.3s ease-in-out;
 
-		@include respondAt(768px) {
-			position: static;
-			max-height: none;
-			min-width: auto;
-			max-width: none;
-			margin-bottom: 24px;
+		&.isOpen {
+			flex-shrink: 0;
+			@include box(330px);
+			padding: 16px 10px 0px 0px;
 		}
 
 		&__header {
-			@include make-flex($dir: row, $just: space-between, $align: center);
+			width: 100%;
 			margin-bottom: 12px;
 			padding-bottom: 8px;
 			border-bottom: 1px solid var(--muted-separator);
+			@include make-flex($dir: row, $just: space-between, $align: center);
+			flex-shrink: 0;
 
 			h3 {
+				margin: 0;
 				font-size: 18px;
 				font-weight: 600;
-				margin: 0;
 				color: var(--foreground);
-			}
-		}
-
-		&__toggle {
-			background: none;
-			border: none;
-			cursor: pointer;
-			padding: 4px;
-			@include make-flex();
-			color: var(--muted-separator);
-			transition: color 0.2s ease;
-
-			&:hover {
-				color: var(--foreground);
-			}
-
-			@include respondAtOpp(768px) {
-				display: none;
-			}
-		}
-
-		&__toggle-icon {
-			width: 20px;
-			height: 20px;
-			fill: currentColor;
-			transition: transform 0.2s ease;
-
-			&--expanded {
-				transform: rotate(180deg);
 			}
 		}
 
 		&__nav {
+			flex: 1;
 			overflow-y: auto;
 			padding-right: 9px;
-			max-height: calc(100vh - 120px);
+			min-height: 0; // Important for flex child to scroll
+
+			& > ::-webkit-scrollbar-thumb {
+				background: var(--foreground-tertiary);
+				border-radius: 3px;
+
+				&:hover {
+					background: var(--foreground);
+				}
+			}
 
 			@include respondAt(768px) {
 				max-height: none;
 			}
+		}
+
+		&__list {
+			min-width: 300px;
 		}
 
 		&__list,
@@ -243,8 +204,8 @@
 		}
 
 		&__sublist {
-			margin-left: 12px;
-			margin-top: 4px;
+			margin-left: 20px;
+			// margin-top: 4px;
 		}
 
 		&__item {
@@ -253,9 +214,9 @@
 			&--section {
 				margin-bottom: 8px;
 
-				& + .toc__item--section {
-					margin-top: 16px;
-				}
+				// & + .toc__item--section {
+				// 	margin-top: 16px;
+				// }
 			}
 
 			&--subsection {
@@ -312,24 +273,6 @@
 		&__title {
 			flex: 1;
 			@include clamp(2);
-		}
-
-		// Custom scrollbar
-		&__nav::-webkit-scrollbar {
-			width: 6px;
-		}
-
-		&__nav::-webkit-scrollbar-track {
-			background: transparent;
-		}
-
-		&__nav::-webkit-scrollbar-thumb {
-			background: var(--foreground-secondary);
-			border-radius: 3px;
-
-			&:hover {
-				background: var(--foreground);
-			}
 		}
 
 		// Animation for collapse/expand

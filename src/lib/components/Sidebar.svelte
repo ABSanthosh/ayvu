@@ -10,18 +10,14 @@
 
 <style lang="scss">
 	.Sidebar {
-		max-height: 100vh;
-		overflow-x: hidden;
-		// padding-right: 8px;
-		@include box(0, 100vh);
+		overflow-y: auto;
+		@include box(0);
 		transition: all 0.3s ease-in-out;
-		// border-right: 1px solid var(--muted-separator);
 		@include make-flex($dir: column, $just: flex-start, $align: flex-start);
 
 		&.isOpen {
+			margin-right: 8px;
 			@include box(340px);
-      margin-right: 8px;
-			// padding: 40px 20px 15px 20px;
 		}
 	}
 </style>
