@@ -9,15 +9,19 @@
 			<a href="/"> ayvu </a>
 		</h2>
 	</ul>
+	<div class="Toolbar">
+		<a href="/app"> &lt; Back to Papers </a>
+	</div>
 </nav>
-
-<div class="Toolbar">
-	<a href="/app" > &lt; Back to Papers </a>
-</div>
 
 {@render children?.()}
 
 <style lang="scss">
+	:global(body:has(.paper-content)) {
+		padding: 10px 20px;
+		max-width: 100%;
+		background-color: #000;
+	}
 	.AppHeader {
 		gap: 10px;
 		@include box($height: 60px);
@@ -54,7 +58,7 @@
 	}
 
 	.Toolbar {
-		@include box($height: auto);
+		@include box(auto, auto);
 		@include make-flex($dir: row, $just: flex-start);
 
 		& > a {

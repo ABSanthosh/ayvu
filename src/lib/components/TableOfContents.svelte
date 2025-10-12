@@ -160,13 +160,15 @@
 
 <style lang="scss">
 	.toc {
-		position: fixed;
-		left: 10px;
-		top: 20px;
-		background: var(--background);
-		border: var(--border-thickness) solid var(--foreground-secondary);
+		position: sticky;
+		// left: 10px;
+		top: 0px;
+		// background: var(--background);
+		background-color: #000;
+		align-self: flex-start;
+		// border: var(--border-thickness) solid var(--foreground-secondary);
 		border-radius: 8px;
-		padding: 16px 10px 16px 16px;
+		padding: 16px 10px 16px 0px;
 		max-height: calc(100vh - 40px);
 		overflow-y: auto;
 		min-width: 280px;

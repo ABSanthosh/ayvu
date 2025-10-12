@@ -77,7 +77,7 @@ const authorization: Handle = async ({ event, resolve }) => {
 const performance: Handle = async ({ event, resolve }) => {
 	const theme = event.cookies.get('theme');
 
-	const iconsToRequest = [...['settings'].sort((a, b) => a.localeCompare(b))] as const;
+	const iconsToRequest = [...['settings', 'menu'].sort((a, b) => a.localeCompare(b))] as const;
 
 	const googleFontIconLink = `<link
       rel="stylesheet"

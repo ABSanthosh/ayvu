@@ -6,25 +6,37 @@
 	let { data } = $props() as { data: PageData & { toc?: TocEntry[] } };
 </script>
 
-{#if data.htmlContent}
-	<!-- Display Table of Contents if available -->
-	{#if data.toc && data.toc.length > 0}
-		<!-- @ts-ignore -->
-		<!-- <TableOfContents toc={data.toc} /> -->
+<main class="PaperPage">
+	{#if data.htmlContent}
+		<!-- Display Table of Contents if available -->
+		{#if data.toc && data.toc.length > 0}
+			<!-- @ts-ignore -->
+			<TableOfContents toc={data.toc} />
+		{/if}
+
+		<!-- Render raw HTML with Drive CSS only -->
+		<div class="paper-content">
+			<button data-icon="menu" class="CrispButton menu-button" aria-label="Toggle Menu"></button>
+			{@html data.htmlContent}
+		</div>
+	{:else}
+		<div class="loading-container">
+			<div class="loading-spinner"></div>
+			<p>Loading paper content from Google Drive...</p>
+		</div>
 	{/if}
+</main>
 
-	<!-- Render raw HTML with Drive CSS only -->
-	<div class="paper-content">
-		{@html data.htmlContent}
-	</div>
-{:else}
-	<div class="loading-container">
-		<div class="loading-spinner"></div>
-		<p>Loading paper content from Google Drive...</p>
-	</div>
-{/if}
+<style lang="scss">
+	.PaperPage {
+		gap: 8px;
+		height: 100%;
+		padding: 20px 0;
+		overflow-y: auto;
+		position: relative;
+		@include make-flex($align: flex-start, $dir: row);
+	}
 
-<style>
 	/* Loading states only */
 	.loading-container {
 		display: flex;
@@ -46,7 +58,19 @@
 	}
 
 	.paper-content {
-		margin-top: 1rem;
+		padding: 20px;
+		position: relative;
+		border-radius: 7px;
+		background-color: var(--background);
+		border: 1px solid var(--muted-separator);
+	}
+	.menu-button {
+		top: 20px;
+		left: 20px;
+		z-index: 1000;
+		position: absolute;
+		border-radius: 4px;
+		@include box(35px, 35px);
 	}
 
 	@keyframes spin {
