@@ -186,7 +186,7 @@
 			@include make-flex($dir: row, $just: space-between, $align: center);
 			margin-bottom: 12px;
 			padding-bottom: 8px;
-			border-bottom: 1px solid var(--foreground-secondary);
+			border-bottom: 1px solid var(--muted-separator);
 
 			h3 {
 				font-size: 18px;
@@ -202,7 +202,7 @@
 			cursor: pointer;
 			padding: 4px;
 			@include make-flex();
-			color: var(--foreground-secondary);
+			color: var(--muted-separator);
 			transition: color 0.2s ease;
 
 			&:hover {

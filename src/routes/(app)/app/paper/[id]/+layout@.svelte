@@ -18,9 +18,17 @@
 
 <style lang="scss">
 	:global(body:has(.paper-content)) {
-		padding: 10px 20px;
 		max-width: 100%;
+		padding: 10px 20px;
+		overflow: hidden;
 		background-color: #000;
+		@include box(100vw, 100vh);
+	}
+
+	:global(#app:has(.paper-content)) {
+		height: 100%;
+		overflow: hidden;
+		@include make-flex($dir: column);
 	}
 	.AppHeader {
 		gap: 10px;
