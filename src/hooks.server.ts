@@ -20,7 +20,6 @@ const authentication: Handle = async ({ event, resolve }) => {
 	const googleSub = event.cookies.get('session');
 	if (googleSub) {
 		const user = await getUserById(googleSub);
-		console.log(`?refresh_token=${encodeURIComponent(user.refreshToken)}&access_token=${encodeURIComponent(user.accessToken)}`);
 		if (user) {
 			event.locals.user = user;
 
