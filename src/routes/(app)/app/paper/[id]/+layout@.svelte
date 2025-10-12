@@ -19,10 +19,10 @@
 <style lang="scss">
 	:global(body:has(.paper-content)) {
 		max-width: 100%;
-		padding: 20px;
+		padding: 15px;
 		overflow: hidden;
 		background-color: #000;
-		@include box(100vw, 100vh);
+		@include box(100dvw, 100dvh);
 	}
 
 	:global(#app:has(.paper-content)) {
@@ -33,7 +33,7 @@
 	}
 	.AppHeader {
 		gap: 10px;
-		@include box($height: 60px);
+		@include box($height: 35px);
 		@include make-flex($dir: row, $just: space-between);
 		@include respondAt(400px) {
 			flex-direction: column;

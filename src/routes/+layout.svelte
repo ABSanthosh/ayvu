@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { setContext, type Snippet } from 'svelte';
 	import '../styles/root/reset.scss';
+	// import '../styles/root/theme.scss';
 	import '../styles/root/global.scss';
 	import type { LayoutData } from './$types';
 

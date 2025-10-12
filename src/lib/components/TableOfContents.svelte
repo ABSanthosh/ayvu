@@ -2,11 +2,17 @@
 	import type { TocEntry } from '$lib/types/Toc.type';
 	import { onMount } from 'svelte';
 
-	let { toc, isOpen = $bindable() }: { toc: TocEntry[]; isOpen: boolean } = $props();
+	let {
+		toc,
+		isOpen = $bindable(),
+		toggleOpen = $bindable()
+	}: { toc: TocEntry[]; isOpen: boolean; toggleOpen: () => void } = $props();
 
 	let activeSection = $state('');
-	let tocContainer = $state<HTMLElement>();
+	let tocContainer = $state<HTMLDialogElement>();
 	let isExpanded = $state(true);
+
+	let innerWidth = $state(0);
 
 	/**
 	 * Scroll to a section smoothly
@@ -96,12 +102,59 @@
 			observer.disconnect();
 		};
 	});
+
+	$effect(() => {
+		if (innerWidth >= 1180) {
+			if (tocContainer && tocContainer.open) {
+				tocContainer.close();
+			}
+		}
+	});
+
+	$effect(() => {
+		if (tocContainer && innerWidth < 1180) {
+			if (isOpen) {
+				tocContainer.showModal();
+			} else {
+				tocContainer.close();
+			}
+		}
+	});
+
+	// Add this in onMount or as a separate effect
+	$effect(() => {
+		if (tocContainer && innerWidth < 1180) {
+			const handleBackdropClick = (e: MouseEvent) => {
+				const rect = tocContainer!.getBoundingClientRect();
+				if (
+					e.clientX < rect.left ||
+					e.clientX > rect.right ||
+					e.clientY < rect.top ||
+					e.clientY > rect.bottom
+				) {
+					toggleOpen();
+				}
+			};
+
+			tocContainer.addEventListener('click', handleBackdropClick);
+			return () => tocContainer!.removeEventListener('click', handleBackdropClick);
+		}
+	});
 </script>
 
+<svelte:window bind:innerWidth />
+
 {#if toc && toc.length > 0}
-	<aside class="toc" bind:this={tocContainer} class:isOpen>
+	<dialog class="toc" bind:this={tocContainer} class:isOpen>
 		<div class="toc__header">
 			<h3>Contents</h3>
+			<button
+				data-icon={isOpen ? 'side_navigation' : 'dock_to_right'}
+				aria-label="Toggle Menu"
+				class="CrispButton menu-button"
+				onclick={toggleOpen}
+			>
+			</button>
 		</div>
 
 		{#if isExpanded}
@@ -113,7 +166,7 @@
 				</ul>
 			</nav>
 		{/if}
-	</aside>
+	</dialog>
 {/if}
 
 {#snippet tocItem(item: { entry: TocEntry; depth: number; children: any[] })}
@@ -142,18 +195,71 @@
 {/snippet}
 
 <style lang="scss">
+	.toc::backdrop {
+		backdrop-filter: blur(5px);
+	}
+
 	.toc {
 		@include box(0);
 		flex-shrink: 0;
-		border-radius: 8px;
+		margin-right: -1px;
+		position: relative;
 		background-color: #000;
-		@include make-flex($dir: column, $just: flex-start, $align: flex-start);
 		transition: all 0.3s ease-in-out;
+		@include make-flex($dir: column, $just: flex-start, $align: flex-start);
+
+		.menu-button {
+			top: 12px;
+			left: 12px;
+			z-index: 10;
+			// position: absolute;
+			border-radius: 4px;
+			@include box(35px, 35px);
+			@include respondAtOpp(1180px) {
+				display: none;
+			}
+		}
 
 		&.isOpen {
 			flex-shrink: 0;
-			@include box(330px);
-			padding: 16px 10px 0px 0px;
+			@include box(336px);
+			padding: 0px 10px 0px 0px;
+
+			@include respondAt(1180px) {
+				transform: translateX(0);
+				height: 100vh;
+				padding: 10px 10px 0px 10px !important;
+			}
+		}
+
+		@include respondAtOpp(1180px) {
+			&::backdrop {
+				display: none;
+			}
+		}
+
+		@include respondAt(1180px) {
+			left: 0;
+			top: 0;
+			z-index: 100;
+			height: 100vh;
+			width: 330px;
+			position: fixed;
+			max-width: unset;
+			max-height: unset;
+			transform: translateX(-100%);
+			padding: 10px 10px 0px 10px !important;
+			border-right: 1px solid var(--muted-separator);
+
+			&::backdrop {
+				max-width: unset;
+				max-height: unset;
+				border-radius: 20px;
+				@include box(100vw, 100vh);
+				background: rgba(0, 0, 0, 0.49);
+				box-shadow: 0 0 20px 1px #00000087;
+				backdrop-filter: blur(5px) saturate(170%) brightness(1.04);
+			}
 		}
 
 		&__header {
@@ -172,20 +278,19 @@
 			}
 		}
 
+		::-webkit-scrollbar {
+			width: 3px;
+		}
+		::-webkit-scrollbar-thumb {
+			background: var(--foreground-tertiary);
+		}
+
 		&__nav {
 			flex: 1;
+			min-height: 0;
 			overflow-y: auto;
 			padding-right: 9px;
-			min-height: 0; // Important for flex child to scroll
-
-			& > ::-webkit-scrollbar-thumb {
-				background: var(--foreground-tertiary);
-				border-radius: 3px;
-
-				&:hover {
-					background: var(--foreground);
-				}
-			}
+			background-color: #000;
 
 			@include respondAt(768px) {
 				max-height: none;
@@ -205,7 +310,6 @@
 
 		&__sublist {
 			margin-left: 20px;
-			// margin-top: 4px;
 		}
 
 		&__item {
@@ -213,10 +317,6 @@
 
 			&--section {
 				margin-bottom: 8px;
-
-				// & + .toc__item--section {
-				// 	margin-top: 16px;
-				// }
 			}
 
 			&--subsection {
@@ -235,39 +335,39 @@
 		}
 
 		&__link {
+			gap: 8px;
 			display: block;
-			text-decoration: none;
-			color: var(--foreground-secondary);
+			line-height: 1.4;
 			padding: 6px 8px;
 			border-radius: 4px;
+			text-decoration: none;
 			transition: all 0.2s ease;
+			color: var(--foreground-secondary);
 			@include make-flex($dir: row, $align: flex-start, $just: flex-start);
-			gap: 8px;
-			line-height: 1.4;
 
 			&:hover {
-				background: var(--foreground-secondary);
 				color: var(--background);
+				background: var(--foreground-secondary);
 			}
 
 			&--active {
-				background: var(--foreground);
-				color: var(--background);
 				font-weight: 500;
+				color: var(--background);
+				background: var(--foreground);
 
 				.toc__tag {
-					color: var(--background);
 					opacity: 0.8;
+					color: var(--background);
 				}
 			}
 		}
 
 		&__tag {
 			flex-shrink: 0;
-			font-weight: 600;
 			font-size: 12px;
-			color: var(--foreground-tertiary);
 			min-width: 24px;
+			font-weight: 600;
+			color: var(--foreground-tertiary);
 		}
 
 		&__title {

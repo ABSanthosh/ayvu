@@ -2,15 +2,14 @@
 	import type { PageData } from './$types';
 	import type { TocEntry } from '$lib/types/Toc.type';
 	import TableOfContents from '$lib/components/TableOfContents.svelte';
-	import Sidebar from '$components/Sidebar.svelte';
 
 	let { data } = $props() as { data: PageData & { toc?: TocEntry[] } };
 
-	let isSidebarOpen = $state(true);
+	let isSidebarOpen = $state(false);
 </script>
 
 <main class="PaperPage">
-	<TableOfContents toc={data.toc} isOpen={isSidebarOpen} />
+	<TableOfContents toc={data.toc} isOpen={isSidebarOpen} toggleOpen={() => (isSidebarOpen = !isSidebarOpen)} />
 	<div class="paper-content">
 		<button
 			data-icon={isSidebarOpen ? 'side_navigation' : 'dock_to_right'}
@@ -56,7 +55,7 @@
 	.menu-button {
 		top: 12px;
 		left: 12px;
-		z-index: 1000;
+		z-index: 10;
 		position: absolute;
 		border-radius: 4px;
 		@include box(35px, 35px);

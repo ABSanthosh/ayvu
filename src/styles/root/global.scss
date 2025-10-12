@@ -1,4 +1,4 @@
-@use './theme.scss';
+@forward './theme.scss';
 @forward './fonts.scss';
 @use './mixins.scss' as *;
 
@@ -27,10 +27,6 @@
 		background: var(--foreground);
 	}
 }
-
-// * + * {
-// 	margin-top: var(--line-height);
-// }
 
 *[data-mandatory] {
 	&:after {
