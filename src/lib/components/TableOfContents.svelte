@@ -202,7 +202,7 @@
 	.toc {
 		@include box(0);
 		flex-shrink: 0;
-		margin-right: -1px;
+		margin-right: -2px;
 		position: relative;
 		background-color: #000;
 		transition: all 0.3s ease-in-out;
