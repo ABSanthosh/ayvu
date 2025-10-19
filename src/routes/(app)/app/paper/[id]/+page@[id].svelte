@@ -1,16 +1,54 @@
 <script lang="ts">
-	import type { PageData } from './$types';
+	import type { PageProps } from './$types';
 	import type { TocEntry } from '$lib/types/Toc.type';
 	import TableOfContents from '$lib/components/TableOfContents.svelte';
+	import VectorIDB from '$lib/RAG/vdb';
+	import { browser } from '$app/environment';
+	import { enhance } from '$app/forms';
+	import { onMount } from 'svelte';
 
-	let { data } = $props() as { data: PageData & { toc?: TocEntry[] } };
+	let { data, form } = $props() as PageProps & { toc?: TocEntry[] };
 
 	let isSidebarOpen = $state(false);
-	console.log(data.embeddingsFile)
+	// console.log(data.embeddingsFile);
+
+	let vectorDB: VectorIDB;
+
+	onMount(() => {
+		if (browser) {
+			vectorDB = new VectorIDB({
+				vectorPath: `paper-embeddings-${data.paperId}`,
+				distanceFunction: 'cosine',
+				dimension: 768
+			});
+		}
+	});
+
+	$effect(() => {
+		if (!form?.embeddingsFile) return;
+		if (!browser) return;
+
+		(async () => {
+			// 1. Check if vectorDB is empty
+			// 2. if empty, load embeddings from form.embeddingsFile to vectorDB using vectorDB.insert
+			if (await vectorDB.isEmpty()) {
+				for (let i = 0; i < form.embeddingsFile.length; i++) {
+					await vectorDB.insert(form.embeddingsFile[i].embedding, form.embeddingsFile[i].metadata);
+				}
+			}
+		})();
+	});
 </script>
 
+<form method="post" action="?/getEmbeddingsFile" use:enhance>
+	<button type="submit">Get Embeddings File</button>
+</form>
 <main class="PaperPage">
-	<TableOfContents toc={data.toc} isOpen={isSidebarOpen} toggleOpen={() => (isSidebarOpen = !isSidebarOpen)} />
+	<TableOfContents
+		toc={data.toc}
+		isOpen={isSidebarOpen}
+		toggleOpen={() => (isSidebarOpen = !isSidebarOpen)}
+	/>
 	<div class="paper-content">
 		<button
 			data-icon={isSidebarOpen ? 'side_navigation' : 'dock_to_right'}
