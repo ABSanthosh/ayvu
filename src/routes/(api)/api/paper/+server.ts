@@ -153,9 +153,11 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 									controller.close();
 									break;
 								} else if (data.type === 'error') {
+									// Extract error message properly from the SSE error response
+									const errorMessage = data.data?.error || data.error || data.message || 'Processing failed';
 									controller.enqueue(
 										new TextEncoder().encode(
-											`data: ${JSON.stringify({ type: 'error', data: { error: data.data?.error || data.error || 'Processing failed' } })}\n\n`
+											`data: ${JSON.stringify({ type: 'error', data: { progress: { error: errorMessage } } })}\n\n`
 										)
 									);
 									controller.close();

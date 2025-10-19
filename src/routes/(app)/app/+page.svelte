@@ -8,21 +8,6 @@
 	let { data }: { data: PageData } = $props();
 
 	let showModal = $state(true);
-	let formLoading = $state(false);
-	let formErrors = $state({
-		arxivUrl: ''
-	});
-	let formElement: HTMLFormElement;
-
-	// Reset form when modal closes
-	// $effect(() => {
-	// 	if (!showModal) {
-	// 		formErrors = { arxivUrl: '' };
-	// 		if (formElement) {
-	// 			formElement.reset();
-	// 		}
-	// 	}
-	// });
 </script>
 
 <div class="Toolbar">
@@ -30,8 +15,6 @@
 		class="CrispButton"
 		onclick={() => {
 			showModal = true;
-			// Reset form errors when opening modal
-			formErrors = { arxivUrl: '' };
 		}}
 	>
 		Add Entry
@@ -39,78 +22,7 @@
 </div>
 <main class="Papers">
 	<Modal bind:showModal header="Add Entry">
-		<!-- <form
-			bind:this={formElement}
-			use:enhance={() => {
-				formLoading = true;
-				// Clear any existing errors when submitting
-				formErrors = { arxivUrl: '' };
-
-				return async ({ update, result }) => {
-					// @ts-ignore
-					if (result.type === 'failure') {
-						// @ts-ignore
-						if (result.data?.error) {
-							// @ts-ignore
-							formErrors = { ...result.data.error };
-						}
-					} else if (result.type === 'success') {
-						// @ts-ignore
-						if (result.data?.success) {
-							// Success! Close modal and reset form
-							formErrors = { arxivUrl: '' };
-							if (formElement) {
-								formElement.reset();
-							}
-							showModal = false;
-						}
-					} else {
-						// Handle any other unexpected result types
-						console.error('Unexpected result type:', result.type);
-					}
-
-					formLoading = false;
-					// await update();
-				};
-			}}
-			method="POST"
-			action="/app?/createEntry"
-			class="Papers__newEntryForm"
-		>
-			<label class="CrispLabel" data-justify="space-between">
-				<span data-mandatory style="color: inherit;"> arXiv URL </span>
-				<input
-					type="url"
-					class="CrispInput"
-					name="arxivUrl"
-					id="arxivUrl"
-					placeholder="https://arxiv.org/abs/2411.11908"
-					required
-					disabled={formLoading}
-				/>
-				{#if formErrors.arxivUrl !== ''}
-					<span class="CrispMessage" data-type="error">
-						{formErrors.arxivUrl}
-					</span>
-				{/if}
-			</label>
-
-			<button
-				class="CrispButton"
-				style="margin-left: auto;"
-				data-type="invert"
-				type="submit"
-				disabled={formLoading}
-			>
-				{#if formLoading}
-					Fetching Paper...
-				{:else}
-					Add Paper
-				{/if}
-			</button>
-		</form> -->
-
-		<PaperForm />
+		<PaperForm bind:showModal />
 	</Modal>
 
 	{#each data.papers as paper, i (paper.id)}

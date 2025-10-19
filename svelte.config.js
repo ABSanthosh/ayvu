@@ -21,6 +21,7 @@ const config = {
 			$data: 'src/lib/data',
 			$utils: 'src/lib/utils',
 			$types: 'src/lib/types',
+			$stores: 'src/lib/stores',
 			$styles: 'src/styles/routes',
 			$directive: 'src/lib/directive',
 			$components: 'src/lib/components',
