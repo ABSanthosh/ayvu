@@ -3,6 +3,7 @@
 	import type { TocEntry } from '$lib/types/Toc.type';
 	import AIChat from '$lib/components/AIChat.svelte';
 	import TableOfContents from '$lib/components/TableOfContents.svelte';
+	import TryGemini from '$components/TryGemini.svelte';
 
 	let { data, form } = $props() as PageProps & { toc?: TocEntry[] };
 
@@ -25,7 +26,9 @@
 			onclick={() => (isSidebarOpen = !isSidebarOpen)}
 		>
 		</button>
-		{@html data.htmlContent}
+		<!-- {@html data.htmlContent} -->
+
+		<TryGemini />
 	</div>
 </main>
 
