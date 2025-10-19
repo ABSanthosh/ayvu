@@ -1,6 +1,5 @@
 import type { Actions, PageServerLoad } from './$types';
-// import nanoid from '$utils/nanoid';
-import { fail } from '@sveltejs/kit';
+import { fail, type ActionResult } from '@sveltejs/kit';
 import { XMLParser } from 'fast-xml-parser';
 import { createPaper, getPapersByUserId, getPaperByArxivIdAndUserId } from '$lib/db/Paper.db';
 
@@ -95,100 +94,139 @@ async function fetchArxivMetadata(arxivId: string) {
 	}
 }
 
-export const actions: Actions = {
-	createEntry: async ({ request, locals }) => {
-		const data = await request.formData();
-		const arxivUrl = data.get('arxivUrl') as string;
+// export const actions: Actions = {
+// 	createEntry: async ({ request, locals }) => {
+// 		const data = await request.formData();
+// 		const arxivUrl = data.get('arxivUrl') as string;
 
-		if (!arxivUrl) {
-			return fail(400, {
-				error: {
-					arxivUrl: 'ArXiv URL is required.'
-				}
-			});
-		}
+// 		if (!arxivUrl) {
+// 			return fail(400, {
+// 				error: { arxivUrl: 'ArXiv URL is required.' }
+// 			});
+// 		}
 
-		// Validate arXiv URL format
-		const arxivId = extractArxivId(arxivUrl);
+// 		// Validate arXiv URL format
+// 		const arxivId = extractArxivId(arxivUrl);
+// 		if (!arxivId) {
+// 			return fail(400, {
+// 				error: {
+// 					arxivUrl:
+// 						'Please provide a valid arXiv URL in the format: https://arxiv.org/abs/XXXX.XXXXX'
+// 				}
+// 			});
+// 		}
 
-		if (!arxivId) {
-			return fail(400, {
-				error: {
-					arxivUrl:
-						'Please provide a valid arXiv URL in the format: https://arxiv.org/abs/XXXX.XXXXX'
-				}
-			});
-		}
+// 		try {
+// 			// Check if paper already exists for this user
+// 			const existingPaper = await getPaperByArxivIdAndUserId(arxivId, locals.user!.googleId);
+// 			if (existingPaper) {
+// 				return fail(400, {
+// 					error: { arxivUrl: 'This paper has already been added to your collection.' }
+// 				});
+// 			}
 
-		try {
-			// Check if paper already exists for this user
-			const existingPaper = await getPaperByArxivIdAndUserId(arxivId, locals.user!.googleId);
-			if (existingPaper) {
-				return fail(400, {
-					error: {
-						arxivUrl: 'This paper has already been added to your collection.'
-					}
-				});
-			}
+// 			// Fetch metadata from arXiv API
+// 			const metadata = await fetchArxivMetadata(arxivId);
 
-			// Fetch metadata from arXiv API
-			const metadata = await fetchArxivMetadata(arxivId);
+// 			// Set up SSE stream to Deno server
+// 			const clientId = crypto.randomUUID();
+// 			const sseUrl = `http://localhost:8000/arxiv/${arxivId}?refresh_token=${encodeURIComponent(
+// 				locals.user!.refreshToken
+// 			)}&access_token=${encodeURIComponent(locals.user!.accessToken)}&client_id=${clientId}`;
 
-			// Generate unique ID for the paper
-			// const paperId = nanoid();
+// 			const response = await fetch(sseUrl);
+// 			if (!response.body) {
+// 				throw new Error('No response body from SSE endpoint');
+// 			}
 
-			const extractPaper = await fetch(
-				`http://localhost:8000/arxiv/${arxivId}?refresh_token=${encodeURIComponent(locals.user!.refreshToken)}&access_token=${encodeURIComponent(locals.user!.accessToken)}`
-			).then((res) => res.json());
+// 			// Create a ReadableStream to forward SSE events
+// 			const stream = new ReadableStream({
+// 				async start(controller) {
+// 					const reader = response.body!.getReader();
+// 					const decoder = new TextDecoder();
 
-			if (extractPaper.error) {
-				console.error('Error from extract service:', extractPaper.error);
-				return fail(500, {
-					error: {
-						arxivUrl: 'Failed to process the paper. Please try again later.'
-					}
-				});
-			}
+// 					let buffer = '';
+// 					try {
+// 						while (true) {
+// 							const { done, value } = await reader.read();
+// 							if (done) break;
 
-			// Store in database using abstracted function
-			await createPaper({
-				id: arxivId,
-				title: metadata.title,
-				abstract: metadata.abstract,
-				authors: metadata.authors,
-				publishedOn: metadata.published,
-				arxivId,
-				arxivUrl,
-				userId: locals.user!.googleId
-			});
+// 							buffer += decoder.decode(value, { stream: true });
+// 							const lines = buffer.split('\n\n');
+// 							buffer = lines.pop() || ''; // Keep incomplete data in buffer
 
-			return {
-				success: true,
-				paper: {
-					id: arxivId,
-					arxivId,
-					arxivUrl,
-					...metadata
-				}
-			};
-		} catch (error) {
-			console.error('Failed to fetch arXiv metadata:', error);
+// 							for (const line of lines) {
+// 								if (line.startsWith('data: ')) {
+// 									const eventData = JSON.parse(line.slice(6));
+// 									controller.enqueue(
+// 										new TextEncoder().encode(`data: ${JSON.stringify(eventData)}\n\n`)
+// 									);
+// 									console.log('SSE Lines:', JSON.stringify(eventData));
 
-			// Check if it's a database error vs API error
-			if (error instanceof Error && error.message.includes('Paper not found')) {
-				return fail(404, {
-					error: {
-						arxivUrl: 'Could not find paper with this arXiv ID. Please check the URL and try again.'
-					}
-				});
-			}
+// 									// On completion, save to database and close stream
+// 									if (eventData.type === 'complete') {
+// 										await createPaper({
+// 											id: arxivId,
+// 											title: metadata.title,
+// 											abstract: metadata.abstract,
+// 											authors: metadata.authors,
+// 											publishedOn: metadata.published,
+// 											arxivId,
+// 											arxivUrl,
+// 											userId: locals.user!.googleId
+// 										});
+// 										controller.enqueue(
+// 											new TextEncoder().encode(
+// 												`data: ${JSON.stringify({ type: 'success', data: { arxivId, ...metadata } })}\n\n`
+// 											)
+// 										);
+// 										controller.close();
+// 										break;
+// 									} else if (eventData.type === 'error') {
+// 										controller.enqueue(
+// 											new TextEncoder().encode(
+// 												`data: ${JSON.stringify({ type: 'error', data: { error: eventData.data.progress.error } })}\n\n`
+// 											)
+// 										);
+// 										controller.close();
+// 										break;
+// 									}
+// 								}
+// 							}
+// 						}
+// 					} catch (error) {
+// 						controller.enqueue(
+// 							new TextEncoder().encode(
+// 								`data: ${JSON.stringify({ type: 'error', data: { error: 'SSE connection failed' } })}\n\n`
+// 							)
+// 						);
+// 						controller.close();
+// 					}
+// 				},
+// 				cancel() {
+// 					response.body?.cancel();
+// 				}
+// 			});
 
-			// General error (could be network, database, etc.)
-			return fail(500, {
-				error: {
-					arxivUrl: 'An error occurred while adding the paper. Please try again.'
-				}
-			});
-		}
-	}
-};
+// 			return new Response(stream, {
+// 				headers: {
+// 					'Content-Type': 'text/event-stream',
+// 					'Cache-Control': 'no-cache',
+// 					Connection: 'keep-alive'
+// 				}
+// 			});
+// 		} catch (error) {
+// 			console.error('Failed to process arXiv paper:', error);
+// 			if (error instanceof Error && error.message.includes('Paper not found')) {
+// 				return fail(404, {
+// 					error: {
+// 						arxivUrl: 'Could not find paper with this arXiv ID. Please check the URL and try again.'
+// 					}
+// 				});
+// 			}
+// 			return fail(500, {
+// 				error: { arxivUrl: 'An error occurred while processing the paper. Please try again.' }
+// 			});
+// 		}
+// 	}
+// };

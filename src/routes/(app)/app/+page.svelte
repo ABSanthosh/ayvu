@@ -2,11 +2,12 @@
 	import { enhance } from '$app/forms';
 	import Modal from '$components/Modal.svelte';
 	import PaperCard from '$components/PaperCard.svelte';
+	import PaperForm from '$components/PaperForm.svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 
-	let showModal = $state(false);
+	let showModal = $state(true);
 	let formLoading = $state(false);
 	let formErrors = $state({
 		arxivUrl: ''
@@ -14,14 +15,14 @@
 	let formElement: HTMLFormElement;
 
 	// Reset form when modal closes
-	$effect(() => {
-		if (!showModal) {
-			formErrors = { arxivUrl: '' };
-			if (formElement) {
-				formElement.reset();
-			}
-		}
-	});
+	// $effect(() => {
+	// 	if (!showModal) {
+	// 		formErrors = { arxivUrl: '' };
+	// 		if (formElement) {
+	// 			formElement.reset();
+	// 		}
+	// 	}
+	// });
 </script>
 
 <div class="Toolbar">
@@ -38,7 +39,7 @@
 </div>
 <main class="Papers">
 	<Modal bind:showModal header="Add Entry">
-		<form
+		<!-- <form
 			bind:this={formElement}
 			use:enhance={() => {
 				formLoading = true;
@@ -69,7 +70,7 @@
 					}
 
 					formLoading = false;
-					await update();
+					// await update();
 				};
 			}}
 			method="POST"
@@ -107,7 +108,9 @@
 					Add Paper
 				{/if}
 			</button>
-		</form>
+		</form> -->
+
+		<PaperForm />
 	</Modal>
 
 	{#each data.papers as paper, i (paper.id)}
@@ -144,17 +147,17 @@
 			}
 		}
 
-		&__newEntryForm {
-			gap: 20px;
-			padding: 7px 20px 20px 20px;
-			@include box();
-			min-width: 320px;
-			@include make-flex();
+		// &__newEntryForm {
+		// 	gap: 20px;
+		// 	padding: 7px 20px 20px 20px;
+		// 	@include box();
+		// 	min-width: 320px;
+		// 	@include make-flex();
 
-			@include respondAt(470px) {
-				min-width: unset;
-			}
-		}
+		// 	@include respondAt(470px) {
+		// 		min-width: unset;
+		// 	}
+		// }
 	}
 
 	.Toolbar {

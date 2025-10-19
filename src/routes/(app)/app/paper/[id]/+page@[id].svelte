@@ -6,6 +6,7 @@
 	let { data } = $props() as { data: PageData & { toc?: TocEntry[] } };
 
 	let isSidebarOpen = $state(false);
+	console.log(data.embeddingsFile)
 </script>
 
 <main class="PaperPage">

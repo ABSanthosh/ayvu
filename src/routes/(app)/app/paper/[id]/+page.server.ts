@@ -25,7 +25,13 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 			throw error(404, 'paper.html not found in the folder');
 		}
 
+		const vectorsFileId = driveFileMap['embeddings.json'];
+		if (!vectorsFileId) {
+			throw error(404, 'embeddings.json not found in the folder');
+		}
+
 		let htmlContent = await getFileContent(htmlFileId.id, user.accessToken, user.refreshToken);
+		let vectorsFile = await getFileContent(vectorsFileId.id, user.accessToken, user.refreshToken);
 
 		// Process HTML to replace image sources and CSS links with Google Drive URLs
 		// Use authenticated endpoints for private images
@@ -39,6 +45,7 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 		return {
 			paperId: params.id,
 			htmlContent: cleanedHtmlContent,
+			embeddingsFile: vectorsFile,
 			toc
 		};
 	} catch (err) {
