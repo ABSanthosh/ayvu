@@ -1,56 +1,20 @@
 <script lang="ts">
 	import { applyAction, deserialize, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
+	import {
+		ProcessingStatus,
+		ProcessingStep,
+		type ProgressEvent,
+		type StepProgress
+	} from '$types/SSE.type';
 	import { type ActionResult } from '@sveltejs/kit';
 
 	let { showModal = $bindable() } = $props();
 
-	enum ProcessingStep {
-		DOWNLOAD_SOURCE = 'download_source',
-		EXTRACT_TARBALL = 'extract_tarball',
-		COMPILE_LATEX = 'compile_latex',
-		POSTPROCESS = 'postprocess',
-		CLEANUP_HTML = 'cleanup_html',
-		GENERATE_WEIGHTS = 'generate_weights',
-		UPLOAD_TO_DRIVE = 'upload_to_drive'
-	}
-
-	enum ProcessingStatus {
-		PENDING = 'pending',
-		IN_PROGRESS = 'in_progress',
-		COMPLETED = 'completed',
-		FAILED = 'failed'
-	}
-
-	interface StepProgress {
-		status: ProcessingStatus;
-		progress?: number; // 0-100 percentage
-		message?: string;
-		error?: string;
-	}
-
-	interface ProgressEvent {
-		type: 'progress' | 'complete' | 'error';
-		data: {
-			arxivId: string;
-			step?: ProcessingStep;
-			progress?: StepProgress;
-			steps?: Record<ProcessingStep, StepProgress>;
-			overallStatus?: ProcessingStatus;
-		};
-	}
-
 	let formElement: HTMLFormElement;
 	let formLoading = $state(false);
 	let formErrors = $state({ arxivUrl: '' });
-	let progressSteps = $state<Record<ProcessingStep, StepProgress>>({
-		[ProcessingStep.DOWNLOAD_SOURCE]: { status: ProcessingStatus.PENDING },
-		[ProcessingStep.EXTRACT_TARBALL]: { status: ProcessingStatus.PENDING },
-		[ProcessingStep.COMPILE_LATEX]: { status: ProcessingStatus.PENDING },
-		[ProcessingStep.POSTPROCESS]: { status: ProcessingStatus.PENDING },
-		[ProcessingStep.GENERATE_WEIGHTS]: { status: ProcessingStatus.PENDING },
-		[ProcessingStep.UPLOAD_TO_DRIVE]: { status: ProcessingStatus.PENDING }
-	});
+	let progressSteps = $state<Partial<Record<ProcessingStep, StepProgress>>>({});
 	let overallStatus = $state<ProcessingStatus>(ProcessingStatus.PENDING);
 	let errorMessage = $state('');
 
@@ -116,11 +80,11 @@
 								if (event.data.overallStatus) {
 									overallStatus = event.data.overallStatus;
 								}
-							} else if (event.type === 'success' || event.type === 'complete') {
+							} else if (event.type === 'complete') {
 								formErrors = { arxivUrl: '' };
 								if (formElement) formElement.reset();
 								formLoading = false;
-                
+
 								overallStatus = ProcessingStatus.COMPLETED;
 								invalidateAll(); // Refresh the data
 								break;
@@ -170,12 +134,14 @@
 			} else {
 				// Handle non-streaming responses (errors, etc.)
 				const result: ActionResult = deserialize(await response.text());
+				console.log('Form submission result:', result);
 
 				if (result.type === 'failure') {
 					if (result.data?.error) {
 						formErrors = { arxivUrl: '', ...result.data.error };
 					}
 				} else if (result.type === 'error') {
+					console.error('Form submission error:', result.error);
 					errorMessage = result.error?.message || 'An error occurred';
 				}
 				formLoading = false;

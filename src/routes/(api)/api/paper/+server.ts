@@ -63,9 +63,9 @@ async function fetchArxivMetadata(arxivId: string) {
 			authors,
 			published
 		};
-	} catch (error) {
-		console.error('Error fetching arXiv metadata:', error);
-		throw error;
+	} catch (err) {
+		console.error('Error fetching arXiv metadata:', err);
+		throw err;
 	}
 }
 
