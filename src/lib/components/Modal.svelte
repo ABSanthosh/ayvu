@@ -76,7 +76,7 @@
 
 		&__content {
 			display: none;
-			margin: 15px;
+			// margin: 15px;
 			padding: 7px 20px 20px 20px;
 			background-color: transparent;
 			background-color: var(--modal-bg);

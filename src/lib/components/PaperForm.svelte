@@ -79,6 +79,7 @@
 				formElement?.reset();
 				isLoading = false;
 				isSubmitted = true;
+				showModal = false;
 				invalidateAll();
 			},
 			onError: (state, error) => {
@@ -153,12 +154,13 @@
 </form>
 
 <style lang="scss">
-	form {
+	.Papers__newEntryForm {
 		gap: 20px;
-		padding: 7px 20px 20px 20px;
-		@include box();
-		min-width: 320px;
+		@include box(80vw);
+		// min-width: 320px;
+		max-width: 500px;
 		@include make-flex();
+		padding: 7px 20px 20px 20px;
 
 		@include respondAt(470px) {
 			min-width: unset;

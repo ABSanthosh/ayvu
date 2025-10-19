@@ -7,7 +7,7 @@
 
 	let { data }: { data: PageData } = $props();
 
-	let showModal = $state(true);
+	let showModal = $state(false);
 </script>
 
 <div class="Toolbar">
