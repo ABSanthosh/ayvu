@@ -86,18 +86,18 @@ class VectorIDB {
 		const store = tx.objectStore('vectors');
 		const allVectors = await store.getAll();
 
-		console.log('Loaded vectors from IndexedDB:', allVectors.length, 'items');
+		// console.log('Loaded vectors from IndexedDB:', allVectors.length, 'items');
 
 		if (allVectors.length > 0) {
 			const validVectors = allVectors.filter((item: any) => !item.isDeleted);
-			console.log('Valid (non-deleted) vectors:', validVectors.length);
+			// console.log('Valid (non-deleted) vectors:', validVectors.length);
 
 			const keys = validVectors.map((item: any) => item.id.toString());
 			const values = validVectors.map((item: any) => toPlainArray(item.vector));
 
 			if (validVectors.length > 0) {
 				await this.index.bulkInsert(keys, values);
-				console.log('Inserted vectors into HNSW index:', keys.length);
+				// console.log('Inserted vectors into HNSW index:', keys.length);
 			}
 		}
 		await tx.done;

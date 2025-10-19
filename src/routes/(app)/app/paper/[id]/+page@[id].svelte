@@ -1,48 +1,16 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
 	import type { TocEntry } from '$lib/types/Toc.type';
+	import AIChat from '$lib/components/AIChat.svelte';
 	import TableOfContents from '$lib/components/TableOfContents.svelte';
-	import VectorIDB from '$lib/RAG/vdb';
-	import { browser } from '$app/environment';
-	import { enhance } from '$app/forms';
-	import { onMount } from 'svelte';
 
 	let { data, form } = $props() as PageProps & { toc?: TocEntry[] };
 
 	let isSidebarOpen = $state(false);
-	// console.log(data.embeddingsFile);
-
-	let vectorDB: VectorIDB;
-
-	onMount(() => {
-		if (browser) {
-			vectorDB = new VectorIDB({
-				vectorPath: `paper-embeddings-${data.paperId}`,
-				distanceFunction: 'cosine',
-				dimension: 768
-			});
-		}
-	});
-
-	$effect(() => {
-		if (!form?.embeddingsFile) return;
-		if (!browser) return;
-
-		(async () => {
-			// 1. Check if vectorDB is empty
-			// 2. if empty, load embeddings from form.embeddingsFile to vectorDB using vectorDB.insert
-			if (await vectorDB.isEmpty()) {
-				for (let i = 0; i < form.embeddingsFile.length; i++) {
-					await vectorDB.insert(form.embeddingsFile[i].embedding, form.embeddingsFile[i].metadata);
-				}
-			}
-		})();
-	});
 </script>
 
-<form method="post" action="?/getEmbeddingsFile" use:enhance>
-	<button type="submit">Get Embeddings File</button>
-</form>
+<!-- <AIChat arxivId={data.paperId} bind:form /> -->
+
 <main class="PaperPage">
 	<TableOfContents
 		toc={data.toc}

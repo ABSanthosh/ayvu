@@ -7,6 +7,31 @@ import {
 	processHtmlCssLinks
 } from '$lib/utils/drive-image';
 import { error, type Actions } from '@sveltejs/kit';
+import type { EmbeddingsFile } from '$types/RAG.type';
+import { generateText } from 'ai';
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { GOOGLE_AI_API_KEY } from '$env/static/private';
+
+const SYSTEM_PROMPT = `You are a search query optimizer for vector database searches. The database has chunks of a single research paper. The research paper may be from any discipline. Your task is to reformulate user queries into more effective search terms.
+
+Given a user's search query, you must:
+1. Identify the core concepts and intent
+2. Add relevant synonyms and related terms
+3. Remove irrelevant filler words
+4. Structure the query to emphasize key terms
+5. Include technical or domain-specific terminology if applicable
+
+Provide only the optimized search query without any explanations, greetings, or additional commentary.
+
+Example input: "how to fix a bike tire that's gone flat"
+Example output: "bicycle tire repair puncture fix patch inflate maintenance flat tire inner tube replacement"
+
+Constraints:
+- Output only the enhanced search terms
+- Keep focus on searchable concepts
+- Include both specific and general related terms
+- Maintain all important meaning from original query
+`;
 
 export const load: PageServerLoad = async ({ params, parent }) => {
 	const { user } = await parent();
@@ -69,16 +94,6 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 	}
 };
 
-export interface Chunk {
-	text: string;
-	metadata: {
-		sectionId: string;
-		title: string;
-		hierarchy: 'section' | 'subsection' | 'subsubsection';
-		parentSection?: string;
-	};
-}
-
 export const actions: Actions = {
 	getEmbeddingsFile: async ({ params, locals }) => {
 		const { user } = locals;
@@ -99,11 +114,6 @@ export const actions: Actions = {
 			if (!vectorsFileId) {
 				throw error(404, 'embeddings.json not found in the folder');
 			}
-
-			type EmbeddingsFile = {
-				metadata: Chunk;
-				embedding: number[];
-			}[];
 
 			let vectorsFile = await getFileContent(vectorsFileId.id, user.accessToken, user.refreshToken);
 			return {
@@ -128,5 +138,22 @@ export const actions: Actions = {
 				`Failed to get embeddings file: ${err instanceof Error ? err.message : 'Unknown error'}`
 			);
 		}
+	},
+	rewrite: async ({ request }) => {
+		const data = await request.formData();
+		const prompt = data.get('prompt') as string;
+		const googleAI = createGoogleGenerativeAI({
+			apiKey: GOOGLE_AI_API_KEY
+		});
+
+		console.log('Rewrite prompt:', prompt);
+
+		const result = generateText({
+			model: googleAI('gemini-2.5-flash'),
+			system: SYSTEM_PROMPT,
+			prompt
+		});
+
+		return { success: true, rewrittenQuery: (await result).text };
 	}
 };
