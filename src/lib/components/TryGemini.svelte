@@ -1,7 +1,9 @@
 <script lang="ts">
+	import type { HTMLButtonAttributes } from 'svelte/elements';
+	const { ...restProps }: HTMLButtonAttributes = $props();
 </script>
 
-<button aria-label="Toggle AI Chat" class="TryGemini">
+<button class="TryGemini" {...restProps}>
 	<div class="TryGemini__BG">
 		<div class="TryGemini__morph"></div>
 	</div>
@@ -83,7 +85,7 @@
 	// if .TryGemini is hovered, animate the background and morph
 	.TryGemini:hover,
 	.TryGemini:focus-visible {
-    --icon-size: 22px;
+		--icon-size: 22px;
 		.TryGemini__morph {
 			transform: scale(1);
 			animation-play-state: running;

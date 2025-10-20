@@ -49,7 +49,7 @@ const googleAI = createGoogleGenerativeAI({
 export async function POST({ request }): Promise<Response> {
 	const { messages }: { messages: UIMessage[] } = await request.json();
 
-	// console.log('Received messages:', messages);
+	console.log('Received messages:', JSON.stringify(messages));
 	// return new Response('OK')
 
 	const result = streamText({

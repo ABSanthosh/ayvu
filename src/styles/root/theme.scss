@@ -35,6 +35,10 @@
 	--t-crp-light-border: #1f2328;
 	--t-crp-button-bg: #393939;
 
+	--crp-button-color-hover: var(--foreground);
+	--crp-button-background-color-hover: var(--t-crp-background-hover);
+	--crp-button-border-hover: 1.2px solid var(--t-crp-border-hover);
+
 	--t-crp-label-fg: #fdfdfd;
 
 	--elevation-1: #1a1a1a;

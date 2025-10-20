@@ -104,9 +104,10 @@
 	&[data-type='invert'] {
 		--crp-button-color: var(--t-crp-button-bg);
 		--crp-button-background-color: var(--foreground);
+		--crp-button-disabled-background-color: var(--muted-foreground-3);
 
 		&:hover {
-			--crp-button-background-color: var(--t-crp-background-hover);
+			--crp-button-background-color-hover: #ddd;
 		}
 	}
 

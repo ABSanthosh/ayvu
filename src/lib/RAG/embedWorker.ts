@@ -29,6 +29,12 @@ export type EmbeddingMessages =
 			};
 	  }
 	| {
+			command: 'initFinished';
+			payload: {
+				requestID: string;
+			};
+	  }
+	| {
 			command: 'startQueryEmbedding';
 			payload: {
 				requestID: string;
@@ -132,14 +138,17 @@ class Embeddings {
 			this.taskQueue.push(() => this.queryEmbedding(query));
 			return;
 		}
-		if (!this.tokenizer || !this.model || this.progress?.status !== 'done') {
+		if (!this.tokenizer || !this.model) {
 			throw new Error('Embedding service is not ready.');
 		}
 		try {
+			console.log('Generating embedding for query:', query);
 			const input = `${PREFIXES.query}${query}`;
 			const tokenized = await this.tokenizer([input], { padding: true });
 			const { sentence_embedding } = await this.model(tokenized);
 			const embedding: number[] = sentence_embedding.tolist()[0];
+
+			console.log('Generated embedding:', embedding.slice(0, 5), '...');
 
 			postMessage({
 				command: 'finishQueryEmbedding',
@@ -175,6 +184,7 @@ if (browser) {
 				break;
 			}
 			case 'startQueryEmbedding': {
+				console.log('Received startQueryEmbedding command:', e.data.payload.query);
 				embeddingInstance?.queryEmbedding(e.data.payload.query);
 				break;
 			}

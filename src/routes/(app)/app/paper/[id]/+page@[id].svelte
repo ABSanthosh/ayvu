@@ -8,9 +8,8 @@
 	let { data, form } = $props() as PageProps & { toc?: TocEntry[] };
 
 	let isSidebarOpen = $state(false);
+	let isAIChatOpen = $state(true);
 </script>
-
-<!-- <AIChat arxivId={data.paperId} bind:form /> -->
 
 <main class="PaperPage">
 	<TableOfContents
@@ -26,10 +25,11 @@
 			onclick={() => (isSidebarOpen = !isSidebarOpen)}
 		>
 		</button>
-		<!-- {@html data.htmlContent} -->
+		{@html data.htmlContent}
 
-		<TryGemini />
+		<TryGemini onclick={() => (isAIChatOpen = !isAIChatOpen)} />
 	</div>
+	<AIChat bind:isOpen={isAIChatOpen} arxivId={data.paperId} bind:form />
 </main>
 
 <style lang="scss">
