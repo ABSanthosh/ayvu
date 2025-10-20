@@ -240,8 +240,12 @@
 
 		&--open {
 			flex-shrink: 0;
-			@include box(336px);
+			@include box(100%);
 			padding: 0 0 0 12px;
+
+			@include respondAtOpp(1180px) {
+				padding: 0 0 0 12px;
+			}
 
 			@include respondAt(1180px) {
 				position: fixed;

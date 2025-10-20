@@ -58,6 +58,12 @@ body {
 	padding: var(--line-height) 2ch;
 	line-height: var(--line-height);
 	max-width: 1024px;
+
+	// Dragging state for resizable panels
+	&.dragging {
+		user-select: none;
+		cursor: col-resize;
+	}
 }
 
 a {

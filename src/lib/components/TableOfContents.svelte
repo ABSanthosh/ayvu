@@ -222,8 +222,12 @@
 
 		&.isOpen {
 			flex-shrink: 0;
-			@include box(336px);
+			@include box(100%);
 			padding: 0px 10px 0px 0px;
+
+			@include respondAtOpp(1180px) {
+				padding: 0px 10px 0px 0px;
+			}
 
 			@include respondAt(1180px) {
 				transform: translateX(0);
