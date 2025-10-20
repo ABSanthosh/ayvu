@@ -49,7 +49,7 @@ const googleAI = createGoogleGenerativeAI({
 export async function POST({ request }): Promise<Response> {
 	const { messages }: { messages: UIMessage[] } = await request.json();
 
-	console.log('Received messages:', JSON.stringify(messages));
+	// console.log('Received messages:', JSON.stringify(messages));
 	// return new Response('OK')
 
 	const result = streamText({
@@ -58,12 +58,12 @@ export async function POST({ request }): Promise<Response> {
 		messages: convertToModelMessages(messages),
 		onFinish: ({ usage, sources }) => {
 			const { totalTokens, inputTokens, outputTokens } = usage;
-			console.log('Language Model Usage:', {
-				totalTokens,
-				inputTokens,
-				outputTokens,
-				sources
-			});
+			// console.log('Language Model Usage:', {
+			// 	totalTokens,
+			// 	inputTokens,
+			// 	outputTokens,
+			// 	sources
+			// });
 		}
 	});
 

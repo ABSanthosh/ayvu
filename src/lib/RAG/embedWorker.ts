@@ -107,7 +107,7 @@ class Embeddings {
 			]);
 			this.isInitialized = true;
 			// Process any queued tasks
-			console.log('Processing queued tasks:', this.taskQueue.length);
+			// console.log('Processing queued tasks:', this.taskQueue.length);
 			await this.processTaskQueue();
 		} catch (error) {
 			const message: EmbeddingMessages = {
@@ -123,7 +123,7 @@ class Embeddings {
 	}
 
 	private async processTaskQueue(): Promise<void> {
-		console.log('Processing task queue with', this.taskQueue.length, 'tasks');
+		// console.log('Processing task queue with', this.taskQueue.length, 'tasks');
 		while (this.taskQueue.length > 0) {
 			const task = this.taskQueue.shift();
 			if (task) {
@@ -142,13 +142,13 @@ class Embeddings {
 			throw new Error('Embedding service is not ready.');
 		}
 		try {
-			console.log('Generating embedding for query:', query);
+			// console.log('Generating embedding for query:', query);
 			const input = `${PREFIXES.query}${query}`;
 			const tokenized = await this.tokenizer([input], { padding: true });
 			const { sentence_embedding } = await this.model(tokenized);
 			const embedding: number[] = sentence_embedding.tolist()[0];
 
-			console.log('Generated embedding:', embedding.slice(0, 5), '...');
+			// console.log('Generated embedding:', embedding.slice(0, 5), '...');
 
 			postMessage({
 				command: 'finishQueryEmbedding',
@@ -184,7 +184,7 @@ if (browser) {
 				break;
 			}
 			case 'startQueryEmbedding': {
-				console.log('Received startQueryEmbedding command:', e.data.payload.query);
+				// console.log('Received startQueryEmbedding command:', e.data.payload.query);
 				embeddingInstance?.queryEmbedding(e.data.payload.query);
 				break;
 			}

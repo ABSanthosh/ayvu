@@ -72,7 +72,7 @@ async function fetchArxivMetadata(arxivId: string) {
 export const POST: RequestHandler = async ({ request, locals }) => {
 	const formData = await request.formData();
 	const arxivUrl = formData.get('arxivUrl') as string;
-	console.log('Received ArXiv URL:', arxivUrl);
+	// console.log('Received ArXiv URL:', arxivUrl);
 
 	if (!arxivUrl) {
 		return error(400, {
@@ -112,7 +112,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		throw new Error('No response body from SSE endpoint');
 	}
 
-	console.log('SSE Response received');
+	// console.log('SSE Response received');
 	const progressStream = new ReadableStream({
 		async start(controller) {
 			const reader = response.body!.getReader();

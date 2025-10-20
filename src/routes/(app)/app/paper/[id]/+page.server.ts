@@ -97,7 +97,7 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 export const actions: Actions = {
 	getEmbeddingsFile: async ({ params, locals }) => {
 		const { user } = locals;
-		console.log(params);
+		// console.log(params);
 
 		if (!user) {
 			throw error(401, 'Unauthorized');
@@ -146,7 +146,7 @@ export const actions: Actions = {
 			apiKey: GOOGLE_AI_API_KEY
 		});
 
-		console.log('Rewrite prompt:', prompt);
+		// console.log('Rewrite prompt:', prompt);
 
 		const result = generateText({
 			model: googleAI('gemini-2.5-flash'),

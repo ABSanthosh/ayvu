@@ -66,7 +66,7 @@
 	async function initEmbedWorker() {
 		if (embedWorker) {
 			setupProgress = 'Embedding worker already initialized.';
-			console.log('Embedding worker already initialized.');
+			// console.log('Embedding worker already initialized.');
 			return;
 		}
 		setupProgress = 'Initializing embedding worker...';
@@ -79,7 +79,7 @@
 			} as EmbeddingMessages);
 			embedWorker!.onmessage = async (e: MessageEvent<EmbeddingMessages>) => {
 				const { command, payload } = e.data;
-				console.log('EmbedWorker message received:', command);
+				// console.log('EmbedWorker message received:', command);
 				switch (command) {
 					case 'initFinished': {
 						if (payload.requestID === arxivId) {
@@ -114,7 +114,7 @@
 						}));
 
 						setupProgress = 'Sending message to chat...';
-						console.log('latestUserQuery:', latestUserQuery, query);
+						// console.log('latestUserQuery:', latestUserQuery, query);
 						chat.sendMessage({
 							text: [
 								// Use the stored current query instead of the cleared userInput
@@ -169,7 +169,7 @@
 			use:enhance={({ formData }) => {
 				if (latestUserQuery) formData.set('prompt', latestUserQuery);
 				return async ({ update, result }) => {
-					console.log('Form submission result:', result);
+					// console.log('Form submission result:', result);
 					if (result.type === 'success') {
 						const rewrittenQuery = result.data?.rewrittenQuery;
 						if (embedWorker && rewrittenQuery && latestUserQuery) {
@@ -179,11 +179,11 @@
 								payload: { query: rewrittenQuery, requestID: arxivId }
 							} as EmbeddingMessages);
 						} else {
-							console.log('Cannot start embedding - missing requirements:', {
-								hasEmbedWorker: !!embedWorker,
-								hasRewrittenQuery: !!rewrittenQuery,
-								hasCurrentQuery: !!latestUserQuery
-							});
+							// console.log('Cannot start embedding - missing requirements:', {
+							// 	hasEmbedWorker: !!embedWorker,
+							// 	hasRewrittenQuery: !!rewrittenQuery,
+							// 	hasCurrentQuery: !!latestUserQuery
+							// });
 						}
 					}
 					await update();

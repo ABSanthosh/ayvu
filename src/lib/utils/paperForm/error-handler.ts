@@ -103,25 +103,25 @@ export class ErrorHandler {
 			try {
 				// First try to get the response text
 				const responseText = await response.text();
-				console.log('Error response text:', responseText);
+				// console.log('Error response text:', responseText);
 
 				// For SvelteKit error() responses, try parsing as JSON first
 				try {
 					const jsonResponse = JSON.parse(responseText);
-					console.log('Parsed JSON response:', jsonResponse);
+					// console.log('Parsed JSON response:', jsonResponse);
 					if (jsonResponse.message) {
 						this.setGeneralError(jsonResponse.message);
 						return true;
 					}
 				} catch (jsonErr) {
-					console.log('JSON parsing failed, trying ActionResult deserialization');
+					// console.log('JSON parsing failed, trying ActionResult deserialization');
 					// If JSON parsing fails, try to parse as SvelteKit ActionResult
 					try {
 						const result: ActionResult = deserialize(responseText);
 						this.handleActionResult(result);
 						return true;
 					} catch (deserializeErr) {
-						console.log('ActionResult deserialization failed, using raw text');
+						// console.log('ActionResult deserialization failed, using raw text');
 						// If all parsing fails, use the response text as error message
 						const errorMessage =
 							responseText || `Server error: ${response.status} ${response.statusText}`;
