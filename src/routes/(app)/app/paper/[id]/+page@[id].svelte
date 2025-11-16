@@ -8,7 +8,7 @@
 	let { data, form } = $props() as PageProps & { toc?: TocEntry[] };
 
 	let isSidebarOpen = $state(false);
-	let isAIChatOpen = $state(true);
+	let isAIChatOpen = $state(false);
 
 	// Default panel sizes
 	const DEFAULT_TOC_WIDTH = 336;
@@ -70,9 +70,9 @@
 	}
 
 	.panel-wrapper {
-		position: relative;
-		flex-shrink: 0;
 		height: 100%;
+		flex-shrink: 0;
+		position: relative;
 		transition: width 0.3s ease-in-out;
 
 		&.toc-panel {
@@ -94,9 +94,8 @@
 		height: 100%;
 		overflow: hidden;
 		position: relative;
-		border-radius: 7px;
+		// border-radius: 7px;
 		background-color: var(--background);
-		border: 1px solid var(--muted-separator);
 
 		& > :global(.ltx_page_main) {
 			height: 100%;

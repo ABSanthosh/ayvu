@@ -222,11 +222,13 @@
 
 		&.isOpen {
 			flex-shrink: 0;
-			@include box(100%);
-			padding: 0px 10px 0px 0px;
-
+			overflow-x: hidden;
+			padding: 10px 10px 10px 10px;
+			border-right: 1px solid var(--muted-separator);
+			
 			@include respondAtOpp(1180px) {
-				padding: 0px 10px 0px 0px;
+				@include box(100%);
+				padding: 10px 10px 10px 10px;
 			}
 
 			@include respondAt(1180px) {

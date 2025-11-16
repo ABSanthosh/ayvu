@@ -137,7 +137,7 @@
 	});
 </script>
 
-<div class="AIChat" class:AIChat--open={isOpen}>
+<div class="AIChat" class:isOpen>
 	<div class="AIChat__content">
 		<div class="AIChat__messages">
 			{#each chat.messages as message, messageIndex (messageIndex)}
@@ -238,10 +238,11 @@
 		transition: width 0.3s ease-in-out;
 		@include make-flex($dir: column, $just: flex-start, $align: stretch);
 
-		&--open {
+		&.isOpen {
 			flex-shrink: 0;
 			@include box(100%);
 			padding: 0 0 0 12px;
+			border-left: 1px solid var(--muted-separator);
 
 			@include respondAtOpp(1180px) {
 				padding: 0 0 0 12px;
@@ -262,7 +263,7 @@
 			}
 		}
 
-		&:not(&--open) {
+		&:not(&.isOpen) {
 			.AIChat__content {
 				transform: translateX(100%);
 				opacity: 0;
