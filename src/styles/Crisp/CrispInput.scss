@@ -26,7 +26,6 @@
 	}
 
 	&[data-type='text-area'] {
-		resize: vertical;
 		--crp-input-height: 100px;
 		--crp-input-padding: 12px;
 		min-height: var(--crp-text-area-min-height);

@@ -395,7 +395,6 @@
 			border: 1px solid var(--muted-separator);
 
 			& > textarea {
-				resize: none;
 				border-radius: inherit;
 			}
 
