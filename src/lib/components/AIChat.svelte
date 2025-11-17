@@ -1,11 +1,10 @@
 <script lang="ts">
 	import yaml from 'js-yaml';
 	import { marked } from 'marked';
-	import { onMount } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import VectorIDB from '$lib/RAG/vdb';
 	import { enhance } from '$app/forms';
 	import { Chat } from '@ai-sdk/svelte';
-	import { browser } from '$app/environment';
 	import EmbeddingWorker from '$lib/RAG/embedWorker?worker';
 	import type { ProgressInfo } from '@huggingface/transformers';
 	import { type EmbeddingMessages } from '$lib/RAG/embedWorker';
@@ -14,12 +13,12 @@
 
 	let {
 		arxivId,
-		form = $bindable(),
-		isOpen = $bindable(false)
+		abstract,
+		form = $bindable()
 	}: {
 		form: ActionData;
-		isOpen: boolean;
 		arxivId: string;
+		abstract: string;
 	} = $props();
 	const chat = new Chat({});
 
@@ -35,11 +34,15 @@
 	// 4. Send chat.sendmessage with the context
 	// 5. Display response
 
+	let isOpen = getContext<{ default: boolean }>('isAIChatOpen');
 	let vectorDB: VectorIDB | null = $state(null);
 	let embedWorker = $state<Worker | null>(null);
 	let setupProgress = $state<string>('Initializing...');
 	let latestUserQuery = $state('');
 	let userQueryInput = $state('');
+
+	let AIContainer = $state<HTMLDialogElement>();
+	let innerWidth = $state(0);
 
 	async function initVectorDB() {
 		setupProgress = 'Initializing VectorDB...';
@@ -131,20 +134,76 @@
 		await workerInitPromise;
 	}
 
+	function toggleOpen() {
+		isOpen.default = !isOpen.default;
+	}
+
 	onMount(async () => {
 		await initVectorDB();
 		await initEmbedWorker();
 	});
+
+	$effect(() => {
+		if (innerWidth >= 1180) {
+			if (AIContainer && AIContainer.open) {
+				AIContainer.close();
+			}
+		}
+	});
+
+	$effect(() => {
+		if (AIContainer && innerWidth < 1180) {
+			if (isOpen.default) {
+				AIContainer.showModal();
+			} else {
+				AIContainer.close();
+			}
+		}
+	});
+
+	$effect(() => {
+		if (AIContainer && innerWidth < 1180) {
+			const handleBackdropClick = (e: MouseEvent) => {
+				const rect = AIContainer!.getBoundingClientRect();
+				if (
+					e.clientX < rect.left ||
+					e.clientX > rect.right ||
+					e.clientY < rect.top ||
+					e.clientY > rect.bottom
+				) {
+					toggleOpen();
+				}
+			};
+
+			AIContainer.addEventListener('click', handleBackdropClick);
+			return () => AIContainer!.removeEventListener('click', handleBackdropClick);
+		}
+	});
 </script>
 
-<div class="AIChat" class:isOpen>
+<svelte:window bind:innerWidth />
+
+<dialog class="AIChat" class:isOpen={isOpen.default} bind:this={AIContainer}>
+	<div class="AIChat__top-section">
+		<button
+			type="button"
+			aria-label="Clear"
+			class="CrispButton"
+			data-icon="refresh"
+			onclick={() => {}}
+		></button>
+		<button
+			type="button"
+			aria-label="Close"
+			class="CrispButton"
+			data-icon="close"
+			onclick={() => (isOpen.default = false)}
+		></button>
+	</div>
 	<div class="AIChat__content">
 		<div class="AIChat__messages">
 			{#each chat.messages as message, messageIndex (messageIndex)}
 				<div class="AIChat__message AIChat__message--{message.role}">
-					<div class="AIChat__message-role">
-						{message.role === 'user' ? '>' : '$'}
-					</div>
 					<div class="AIChat__message-content">
 						{#each message.parts as part, partIndex (partIndex)}
 							{#if part.type === 'text'}
@@ -160,16 +219,29 @@
 						{/each}
 					</div>
 				</div>
+			{:else}
+				<div class="AIChat__empty-state">
+					{#if setupProgress}
+						<div class="AIChat__setup-progress">{setupProgress}</div>
+					{:else}
+						<div class="AIChat__empty-message">
+							<span>Build with agent mode.</span>
+							<small>AI responses may be inaccurate.</small>
+						</div>
+					{/if}
+				</div>
 			{/each}
 		</div>
+	</div>
+	<div class="AIChat__bottom-section">
 		<form
 			method="post"
 			action="?/rewrite"
 			class="AIChat__input"
 			use:enhance={({ formData }) => {
 				if (latestUserQuery) formData.set('prompt', latestUserQuery);
+				formData.set('abstract', abstract);
 				return async ({ update, result }) => {
-					// console.log('Form submission result:', result);
 					if (result.type === 'success') {
 						const rewrittenQuery = result.data?.rewrittenQuery;
 						if (embedWorker && rewrittenQuery && latestUserQuery) {
@@ -203,6 +275,7 @@
 				name="userQuery"
 				class="CrispInput"
 				data-type="text-area"
+				placeholder="Ask a question"
 				bind:value={userQueryInput}
 				onkeydown={(e) => {
 					if (e.key === 'Enter' && !e.shiftKey) {
@@ -214,66 +287,139 @@
 				}}
 			></textarea>
 			<button
-				type="button"
+				type="submit"
+				data-icon="send"
 				aria-label="Send"
-				data-type="invert"
 				class="CrispButton"
-				data-icon="arrow_upward"
 				disabled={userQueryInput.trim().length === 0}
 			></button>
 		</form>
-
-		{#if setupProgress}
-			<div class="AIChat__setup-progress">{setupProgress}</div>
-		{/if}
 	</div>
-</div>
+</dialog>
 
 <style lang="scss">
 	.AIChat {
 		@include box(0);
 		flex-shrink: 0;
-		position: relative;
+		border: none;
+		color: inherit;
 		overflow: hidden;
-		transition: width 0.3s ease-in-out;
+		position: relative;
+		background-color: #1a1a1a;
+		// transition: width 0.3s ease-in-out;
 		@include make-flex($dir: column, $just: flex-start, $align: stretch);
+
+		&::backdrop {
+			backdrop-filter: blur(5px);
+		}
 
 		&.isOpen {
 			flex-shrink: 0;
-			@include box(100%);
-			padding: 0 0 0 12px;
+			overflow-x: hidden;
+			// padding: 10px 10px 10px 10px;
 			border-left: 1px solid var(--muted-separator);
 
 			@include respondAtOpp(1180px) {
-				padding: 0 0 0 12px;
+				@include box(100%);
+				// padding: 10px 10px 10px 10px;
 			}
 
 			@include respondAt(1180px) {
-				position: fixed;
-				top: 0;
-				right: 0;
-				z-index: 1000;
-				@include box(100vw, 100vh);
-				padding: 12px;
-				background-color: var(--background);
-			}
-
-			@include respondAt(768px) {
-				padding: 8px;
+				// transform: translateX(0);
+				height: 100vh;
+				transform: translateX(0);
+				// padding: 10px 10px 0px 10px !important;
 			}
 		}
 
 		&:not(&.isOpen) {
+			width: 0;
 			.AIChat__content {
 				transform: translateX(100%);
 				opacity: 0;
 			}
 		}
 
+		@include respondAtOpp(1180px) {
+			&::backdrop {
+				display: none;
+			}
+		}
+
+		@include respondAt(1180px) {
+			top: 0;
+			z-index: 100;
+			height: 100vh;
+			width: 330px;
+			position: fixed;
+			max-width: unset;
+			max-height: unset;
+			margin-left: auto;
+			transform: translateX(100%);
+			// padding: 10px 10px 0px 10px !important;
+			border-right: 1px solid var(--muted-separator);
+
+			&::backdrop {
+				max-width: unset;
+				max-height: unset;
+				border-radius: 20px;
+				@include box(100vw, 100vh);
+				background: rgba(0, 0, 0, 0.49);
+				box-shadow: 0 0 20px 1px #00000087;
+				backdrop-filter: blur(5px) saturate(170%) brightness(1.04);
+			}
+		}
+
 		&__content {
-			@include box();
+			flex-grow: 1;
+			overflow-y: auto;
 			@include make-flex($dir: column, $just: flex-start, $align: stretch);
 			transition: all 0.3s ease-in-out;
+		}
+
+		&__top-section {
+			padding: 8px;
+			border-bottom: 1px solid var(--muted-separator);
+			@include make-flex($just: flex-end, $align: center, $dir: row);
+			gap: 8px;
+
+			.CrispButton {
+				@include box(24px, 24px);
+				padding: 4px;
+				border-radius: 4px;
+
+				&::before {
+					font-size: 16px;
+				}
+			}
+		}
+
+		&__bottom-section {
+			padding: 8px;
+			// border-top: 1px solid var(--muted-separator);
+		}
+
+		&__empty-state {
+			position: absolute;
+			@include make-flex($dir: column, $just: center, $align: center);
+			flex-grow: 1;
+			margin: auto;
+			left: 0;
+			text-align: center;
+		}
+
+		&__empty-message {
+			@include make-flex($dir: column, $just: center, $align: center);
+			gap: 4px;
+			span {
+				color: var(--muted-foreground-2);
+				font-family: var(--font-family);
+				font-size: 14px;
+			}
+			small {
+				font-size: 12px;
+				color: var(--muted-foreground-3);
+			}
 		}
 
 		&__messages {
@@ -281,7 +427,8 @@
 			flex-grow: 1;
 			overflow-y: auto;
 			overflow-x: hidden;
-			padding-right: 4px;
+			padding: 8px;
+			position: relative;
 			@include make-flex($dir: column, $just: flex-start, $align: flex-start);
 
 			&::-webkit-scrollbar {
@@ -301,34 +448,32 @@
 				}
 			}
 
-			// Empty state
-			&:empty {
-				@include make-flex($dir: column, $just: center, $align: center);
+			&__setup-progress {
 				color: var(--muted-foreground-2);
 				font-family: var(--font-family);
 				font-size: 14px;
-
-				&::before {
-					content: 'Start a conversation about this paper';
-				}
 			}
 		}
-
 		&__message {
-			margin-bottom: 16px;
-			@include make-flex($dir: row, $just: flex-start, $align: flex-start);
-			gap: 8px;
+			border-radius: 8px;
+			// margin-bottom: 16px;
+			width: fit-content;
 
 			&--user {
-				.AIChat__message-role {
-					color: var(--accent-1);
+				max-width: 95%;
+				padding: 8px 12px;
+				background-color: #0b57d0;
+				align-self: flex-end;
+				border-radius: 12px 12px 2px 12px;
+				.AIChat__message-content {
+					color: #fff;
 				}
 			}
 
 			&--assistant {
-				.AIChat__message-role {
-					color: var(--link-color);
-				}
+				padding: 5px;
+				background-color: var(--elevation-1);
+				border-radius: 12px 12px 12px 2px;
 
 				.AIChat__message-content {
 					:global(p) {
@@ -347,7 +492,7 @@
 					}
 
 					:global(code) {
-						background-color: var(--elevation-1);
+						background-color: var(--elevation-2);
 						padding: 2px 4px;
 						border-radius: 2px;
 						font-family: var(--font-family);
@@ -355,7 +500,7 @@
 					}
 
 					:global(pre) {
-						background-color: var(--elevation-1);
+						background-color: var(--elevation-2);
 						padding: 12px;
 						border-radius: 4px;
 						overflow-x: auto;
@@ -370,15 +515,6 @@
 			}
 		}
 
-		&__message-role {
-			font-family: var(--font-family);
-			font-weight: var(--font-weight-bold);
-			font-size: 16px;
-			line-height: 1.4;
-			width: 16px;
-			flex-shrink: 0;
-		}
-
 		&__message-content {
 			flex: 1;
 			font-family: var(--font-family);
@@ -390,25 +526,43 @@
 
 		&__input {
 			position: relative;
-			border-radius: 6px;
-			@include make-flex();
+			border-radius: 8px;
+			@include make-flex($align: flex-end);
 			@include box(100%, auto);
 			border: 1px solid var(--muted-separator);
+			// padding: 8px;
+			// gap: 8px;
 
 			& > textarea {
 				border-radius: inherit;
+				background-color: transparent;
+				color: var(--foreground);
+				border: none;
+				padding: 8px 8px 35px;
+				outline: none;
+				border: none !important;
+				resize: none;
+				min-height: 24px;
+				max-height: 200px;
+				line-height: 1.5;
+
+				&::placeholder {
+					color: var(--muted-foreground-2);
+				}
 			}
 
 			& > .CrispButton {
 				padding: 0;
-				right: 7px;
-				top: 7px;
+				border-radius: 4px;
+				@include box(24px, 24px);
+				flex-shrink: 0;
+
 				position: absolute;
-				border-radius: 50%;
-				@include box(35px, 35px);
+				bottom: 5px;
+				right: 5px;
 
 				&::before {
-					color: var(--background) !important;
+					font-size: 16px;
 				}
 			}
 		}

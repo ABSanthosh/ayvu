@@ -4,7 +4,8 @@ import {
 	processHtmlImages,
 	extractTableOfContents,
 	processInlineStyles,
-	processHtmlCssLinks
+	processHtmlCssLinks,
+	processAbstractSection
 } from '$lib/utils/drive-image';
 import { error, type Actions } from '@sveltejs/kit';
 import type { EmbeddingsFile } from '$types/RAG.type';
@@ -14,7 +15,7 @@ import { GOOGLE_AI_API_KEY } from '$env/static/private';
 
 const SYSTEM_PROMPT = `You are a search query optimizer for vector database searches. The database has chunks of a single research paper. The research paper may be from any discipline. Your task is to reformulate user queries into more effective search terms.
 
-Given a user's search query, you must:
+Given a user's search query and abstract of the research paper, you must:
 1. Identify the core concepts and intent
 2. Add relevant synonyms and related terms
 3. Remove irrelevant filler words
@@ -31,6 +32,8 @@ Constraints:
 - Keep focus on searchable concepts
 - Include both specific and general related terms
 - Maintain all important meaning from original query
+
+{{abstract}}
 `;
 
 export const load: PageServerLoad = async ({ params, parent }) => {
@@ -63,6 +66,7 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 		htmlContent = processHtmlImages(htmlContent, driveFileMap, true);
 		htmlContent = processHtmlCssLinks(htmlContent);
 		htmlContent = processInlineStyles(htmlContent);
+		const abstract = processAbstractSection(htmlContent);
 
 		// Extract table of contents and remove it from HTML
 		const { toc, htmlContent: cleanedHtmlContent } = extractTableOfContents(htmlContent);
@@ -70,7 +74,7 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 		return {
 			paperId: params.id,
 			htmlContent: cleanedHtmlContent,
-			// embeddingsFile: vectorsFile,
+			abstract,
 			toc
 		};
 	} catch (err) {
@@ -141,16 +145,20 @@ export const actions: Actions = {
 	},
 	rewrite: async ({ request }) => {
 		const data = await request.formData();
+		console.log('Rewrite prompt:', data);
 		const prompt = data.get('prompt') as string;
+		const abstract = data.get('abstract') as string;
+
+		if (!prompt) {
+			throw error(400, 'Prompt is required');
+		}
 		const googleAI = createGoogleGenerativeAI({
 			apiKey: GOOGLE_AI_API_KEY
 		});
 
-		// console.log('Rewrite prompt:', prompt);
-
 		const result = generateText({
 			model: googleAI('gemini-2.5-flash'),
-			system: SYSTEM_PROMPT,
+			system: SYSTEM_PROMPT.replace('{{abstract}}', abstract || ''),
 			prompt
 		});
 

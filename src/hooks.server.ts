@@ -78,9 +78,17 @@ const performance: Handle = async ({ event, resolve }) => {
 	const theme = event.cookies.get('theme');
 
 	const iconsToRequest = [
-		...['menu', 'settings', 'dock_to_right', 'side_navigation', 'arrow_upward'].sort((a, b) =>
-			a.localeCompare(b)
-		)
+		...[
+			'menu',
+			'send',
+			'close',
+			'refresh',
+			'settings',
+			'arrow_upward',
+			'dock_to_right',
+			"dock_to_left",
+			'side_navigation',
+		].sort((a, b) => a.localeCompare(b))
 	] as const;
 
 	const googleFontIconLink = `<link

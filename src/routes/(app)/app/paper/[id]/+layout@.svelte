@@ -1,6 +1,14 @@
 <script lang="ts">
 	import { type Snippet } from 'svelte';
+	import { setContext } from 'svelte';
+
 	let { children }: { children: Snippet } = $props();
+
+	let isSidebarOpen = $state({ default: false });
+	let isAIChatOpen = $state({ default: false });
+
+	setContext('isSidebarOpen', isSidebarOpen);
+	setContext('isAIChatOpen', isAIChatOpen);
 </script>
 
 <nav class="AppHeader">
@@ -11,6 +19,20 @@
 	</ul>
 	<div class="Toolbar">
 		<!-- <a href="/app"> &lt; Back to Papers </a> -->
+		<button
+			data-type="ghost"
+			data-icon="dock_to_right"
+			aria-label="Toggle Menu"
+			class="CrispButton menu-button"
+			onclick={() => (isSidebarOpen.default = !isSidebarOpen.default)}
+		></button>
+		<button
+			data-type="ghost"
+			aria-label="Toggle Menu"
+			data-icon="dock_to_left"
+			class="CrispButton menu-button"
+			onclick={() => (isAIChatOpen.default = !isAIChatOpen.default)}
+		></button>
 	</div>
 </nav>
 
@@ -40,7 +62,7 @@
 
 		&__nav {
 			gap: 8px;
-			padding: 5px 10px;
+			padding: 5px 0 5px 10px;
 			list-style: none;
 			@include box($height: 100%);
 			@include make-flex($dir: row, $just: space-between);
@@ -68,8 +90,14 @@
 	}
 
 	.Toolbar {
-		@include box(auto, auto);
+		@include box(auto, 100%);
+		padding: 0px 0 0 10px;
 		@include make-flex($dir: row, $just: flex-start);
+
+		& > button {
+			padding: 4px;
+			@include box();
+		}
 
 		& > a {
 			text-decoration: none;

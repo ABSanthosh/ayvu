@@ -4,11 +4,12 @@
 	import AIChat from '$lib/components/AIChat.svelte';
 	import TableOfContents from '$lib/components/TableOfContents.svelte';
 	import TryGemini from '$components/TryGemini.svelte';
+	import { getContext, setContext } from 'svelte';
 
 	let { data, form } = $props() as PageProps & { toc?: TocEntry[] };
 
-	let isSidebarOpen = $state(false);
-	let isAIChatOpen = $state(false);
+	let isSidebarOpen = getContext<{ default: boolean }>('isSidebarOpen');
+	let isAIChatOpen = getContext<{ default: boolean }>('isAIChatOpen');
 
 	// Default panel sizes
 	const DEFAULT_TOC_WIDTH = 336;
@@ -24,33 +25,31 @@
 	<div class="resizable-container">
 		<div
 			class="panel-wrapper toc-panel"
-			style="width: {isSidebarOpen && innerWidth >= 1180 ? `${DEFAULT_TOC_WIDTH}px` : '0px'}"
+			style="width: {isSidebarOpen.default && innerWidth >= 1180 ? `${DEFAULT_TOC_WIDTH}px` : '0px'}"
 		>
 			<TableOfContents
 				toc={data.toc}
-				isOpen={isSidebarOpen}
-				toggleOpen={() => (isSidebarOpen = !isSidebarOpen)}
 			/>
 		</div>
 
 		<div class="paper-content">
 			<button
-				data-icon={isSidebarOpen ? 'side_navigation' : 'dock_to_right'}
+				data-icon={isSidebarOpen.default ? 'side_navigation' : 'dock_to_right'}
 				aria-label="Toggle Menu"
 				class="CrispButton menu-button"
-				onclick={() => (isSidebarOpen = !isSidebarOpen)}
+				onclick={() => (isSidebarOpen.default = !isSidebarOpen.default)}
 			>
 			</button>
 			{@html data.htmlContent}
 
-			<TryGemini onclick={() => (isAIChatOpen = !isAIChatOpen)} />
+			<TryGemini onclick={() => (isAIChatOpen.default = !isAIChatOpen.default)} />
 		</div>
 
 		<div
 			class="panel-wrapper ai-chat-panel"
-			style="width: {isAIChatOpen && innerWidth >= 1180 ? `${DEFAULT_AI_CHAT_WIDTH}px` : '0px'}"
+			style="width: {isAIChatOpen.default && innerWidth >= 1180 ? `${DEFAULT_AI_CHAT_WIDTH}px` : '0px'}"
 		>
-			<AIChat bind:isOpen={isAIChatOpen} arxivId={data.paperId} bind:form />
+			<AIChat arxivId={data.paperId} abstract={data.abstract} bind:form />
 		</div>
 	</div>
 </main>

@@ -1,18 +1,19 @@
 <script lang="ts">
 	import type { TocEntry } from '$lib/types/Toc.type';
-	import { onMount } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 
-	let {
-		toc,
-		isOpen = $bindable(),
-		toggleOpen = $bindable()
-	}: { toc: TocEntry[]; isOpen: boolean; toggleOpen: () => void } = $props();
+	let { toc }: { toc: TocEntry[] } = $props();
 
+	let isOpen = getContext<{ default: boolean }>('isSidebarOpen');
 	let activeSection = $state('');
 	let tocContainer = $state<HTMLDialogElement>();
 	let isExpanded = $state(true);
 
 	let innerWidth = $state(0);
+
+	function toggleOpen() {
+		isOpen.default = !isOpen.default;
+	}
 
 	/**
 	 * Scroll to a section smoothly
@@ -113,7 +114,7 @@
 
 	$effect(() => {
 		if (tocContainer && innerWidth < 1180) {
-			if (isOpen) {
+			if (isOpen.default) {
 				tocContainer.showModal();
 			} else {
 				tocContainer.close();
@@ -145,11 +146,11 @@
 <svelte:window bind:innerWidth />
 
 {#if toc && toc.length > 0}
-	<dialog class="toc" bind:this={tocContainer} class:isOpen>
+	<dialog class="toc" bind:this={tocContainer} class:isOpen={isOpen.default}>
 		<div class="toc__header">
 			<h3>Contents</h3>
 			<button
-				data-icon={isOpen ? 'side_navigation' : 'dock_to_right'}
+				data-icon={isOpen.default ? 'side_navigation' : 'dock_to_right'}
 				aria-label="Toggle Menu"
 				class="CrispButton menu-button"
 				onclick={toggleOpen}
@@ -195,18 +196,19 @@
 {/snippet}
 
 <style lang="scss">
-	.toc::backdrop {
-		backdrop-filter: blur(5px);
-	}
-
 	.toc {
 		@include box(0);
+		border: none;
 		flex-shrink: 0;
 		margin-right: -2px;
 		position: relative;
 		background-color: #000;
 		transition: all 0.3s ease-in-out;
 		@include make-flex($dir: column, $just: flex-start, $align: flex-start);
+
+		&::backdrop {
+			backdrop-filter: blur(5px);
+		}
 
 		.menu-button {
 			top: 12px;
@@ -225,7 +227,7 @@
 			overflow-x: hidden;
 			padding: 10px 10px 10px 10px;
 			border-right: 1px solid var(--muted-separator);
-			
+
 			@include respondAtOpp(1180px) {
 				@include box(100%);
 				padding: 10px 10px 10px 10px;

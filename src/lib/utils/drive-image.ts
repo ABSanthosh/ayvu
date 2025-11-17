@@ -1,3 +1,5 @@
+import { JSDOM } from 'jsdom';
+
 /**
  * Converts Google Drive file URLs to thumbnail URLs for image display
  * @param url - The URL to process (can be Google Drive file URL or any other URL)
@@ -67,7 +69,7 @@ export function processHtmlImages(
 			// If we have a Google Drive file ID for this filename, replace it
 			if (driveFileMap[filename]) {
 				let imageUrl: string;
-				
+
 				if (useAuthenticated) {
 					// Use authenticated endpoint
 					imageUrl = getAuthenticatedImageSrc(driveFileMap[filename].id);
@@ -77,7 +79,7 @@ export function processHtmlImages(
 						? driveFileMap[filename].thumbnailLink!.replace(/=s\d+/, '=s4000')
 						: `https://drive.google.com/thumbnail?id=${driveFileMap[filename].id}&sz=s4000`;
 				}
-				
+
 				return `<img${beforeSrc} src="${imageUrl}"${afterSrc}>`;
 			}
 
@@ -96,33 +98,30 @@ export function processHtmlImages(
  * @returns Promise with blob URL or null if failed
  */
 export async function fetchAuthenticatedImageBlob(
-	fileId: string, 
+	fileId: string,
 	accessToken: string
 ): Promise<string | null> {
 	try {
 		// Use Google Drive API directly with access token
-		const response = await fetch(
-			`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
-			{
-				headers: {
-					'Authorization': `Bearer ${accessToken}`,
-					'Accept': 'image/*'
-				}
+		const response = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+				Accept: 'image/*'
 			}
-		);
-		
+		});
+
 		if (!response.ok) {
 			throw new Error(`Failed to fetch image: ${response.status}`);
 		}
-		
+
 		const blob = await response.blob();
-		
+
 		// Create a blob URL for the image
 		const blobUrl = URL.createObjectURL(blob);
-		
+
 		// Note: Remember to revoke blob URLs when no longer needed to prevent memory leaks
 		// URL.revokeObjectURL(blobUrl);
-		
+
 		return blobUrl;
 	} catch (error) {
 		console.error('Error fetching authenticated image:', error);
@@ -143,29 +142,29 @@ export async function replaceImagesWithAuthenticatedBlobs(
 	accessToken: string
 ): Promise<void> {
 	const images = element.querySelectorAll('img');
-	
+
 	const promises = Array.from(images).map(async (img) => {
 		const src = img.getAttribute('src');
 		if (!src || src.startsWith('http://') || src.startsWith('https://')) {
 			return; // Skip already processed images
 		}
-		
+
 		const filename = src.split('/').pop()?.split('?')[0];
 		if (!filename || !driveFileMap[filename]) {
 			return; // Skip if no Drive mapping
 		}
-		
+
 		const fileId = driveFileMap[filename].id;
 		const blobUrl = await fetchAuthenticatedImageBlob(fileId, accessToken);
-		
+
 		if (blobUrl) {
 			img.src = blobUrl;
-			
+
 			// Store the blob URL for cleanup later if needed
 			img.dataset.blobUrl = blobUrl;
 		}
 	});
-	
+
 	await Promise.all(promises);
 }
 
@@ -188,6 +187,19 @@ export function cleanupBlobUrls(element: HTMLElement): void {
 export function processInlineStyles(htmlContent: string): string {
 	// remove all inline styles
 	return htmlContent.replace(/ style="[^"]*"/gi, '');
+}
+
+export function processAbstractSection(htmlContent: string): string {
+	// get the text inside <div class="ltx_abstract">...</div>
+	const dom = new JSDOM(htmlContent);
+	const document = dom.window.document;
+	const abstractDiv = document.querySelector('div.ltx_abstract');
+
+	if (abstractDiv) {
+		return abstractDiv.textContent?.trim().replaceAll('\n', ' ') || '';
+	}
+
+	return '';
 }
 
 /**
