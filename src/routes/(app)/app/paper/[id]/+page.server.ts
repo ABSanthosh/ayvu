@@ -15,7 +15,7 @@ import { GOOGLE_AI_API_KEY } from '$env/static/private';
 
 const SYSTEM_PROMPT = `You are a search query optimizer for vector database searches. The database has chunks of a single research paper. The research paper may be from any discipline. Your task is to reformulate user queries into more effective search terms.
 
-Given a user's search query and abstract of the research paper, you must:
+Given a user's search query, abstract of the research paper and user selected text if available, you must:
 1. Identify the core concepts and intent
 2. Add relevant synonyms and related terms
 3. Remove irrelevant filler words
@@ -34,6 +34,8 @@ Constraints:
 - Maintain all important meaning from original query
 
 {{abstract}}
+
+User selected text (if any): "{{selectedText}}"
 `;
 
 export const load: PageServerLoad = async ({ params, parent }) => {
@@ -148,6 +150,7 @@ export const actions: Actions = {
 		console.log('Rewrite prompt:', data);
 		const prompt = data.get('prompt') as string;
 		const abstract = data.get('abstract') as string;
+		const selectedText = data.get('selectedText') as string;
 
 		if (!prompt) {
 			throw error(400, 'Prompt is required');
@@ -158,7 +161,10 @@ export const actions: Actions = {
 
 		const result = generateText({
 			model: googleAI('gemini-2.5-flash'),
-			system: SYSTEM_PROMPT.replace('{{abstract}}', abstract || ''),
+			system: SYSTEM_PROMPT.replace('{{abstract}}', abstract || '').replace(
+				'{{selectedText}}',
+				selectedText || ''
+			),
 			prompt
 		});
 

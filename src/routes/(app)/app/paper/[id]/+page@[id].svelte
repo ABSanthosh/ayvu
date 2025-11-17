@@ -4,7 +4,7 @@
 	import AIChat from '$lib/components/AIChat.svelte';
 	import TableOfContents from '$lib/components/TableOfContents.svelte';
 	import TryGemini from '$components/TryGemini.svelte';
-	import { getContext, setContext } from 'svelte';
+	import { getContext } from 'svelte';
 
 	let { data, form } = $props() as PageProps & { toc?: TocEntry[] };
 
@@ -17,22 +17,47 @@
 
 	// Screen width for responsive behavior
 	let innerWidth = $state(0);
+	let selectedText = $state('');
+
+	function handleSelection() {
+		const selection = window.getSelection();
+		if (selection) {
+			const text = selection.toString().trim();
+			if (text) {
+				selectedText = text;
+				isAIChatOpen.default = true;
+			} else if (selection.rangeCount === 0 || selection.isCollapsed) {
+				// Clear selected text when selection is cancelled or collapsed
+				selectedText = '';
+			}
+		}
+	}
+
+	function handleMouseDown() {
+		// Clear selected text when user starts a new selection
+		const selection = window.getSelection();
+		if (selection && selection.toString().trim() === '') {
+			selectedText = '';
+		}
+	}
 </script>
 
 <svelte:window bind:innerWidth />
+<!-- <svelte:document onselectionchange={handleSelectionChange} /> -->
 
 <main class="PaperPage">
 	<div class="resizable-container">
 		<div
 			class="panel-wrapper toc-panel"
-			style="width: {isSidebarOpen.default && innerWidth >= 1180 ? `${DEFAULT_TOC_WIDTH}px` : '0px'}"
+			style="width: {isSidebarOpen.default && innerWidth >= 1180
+				? `${DEFAULT_TOC_WIDTH}px`
+				: '0px'}"
 		>
-			<TableOfContents
-				toc={data.toc}
-			/>
+			<TableOfContents toc={data.toc} />
 		</div>
 
-		<div class="paper-content">
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
+		<div class="paper-content" onmouseup={handleSelection} onmousedown={handleMouseDown}>
 			<button
 				data-icon={isSidebarOpen.default ? 'side_navigation' : 'dock_to_right'}
 				aria-label="Toggle Menu"
@@ -47,9 +72,11 @@
 
 		<div
 			class="panel-wrapper ai-chat-panel"
-			style="width: {isAIChatOpen.default && innerWidth >= 1180 ? `${DEFAULT_AI_CHAT_WIDTH}px` : '0px'}"
+			style="width: {isAIChatOpen.default && innerWidth >= 1180
+				? `${DEFAULT_AI_CHAT_WIDTH}px`
+				: '0px'}"
 		>
-			<AIChat arxivId={data.paperId} abstract={data.abstract} bind:form />
+			<AIChat arxivId={data.paperId} abstract={data.abstract} bind:form bind:selectedText />
 		</div>
 	</div>
 </main>

@@ -14,11 +14,13 @@
 	let {
 		arxivId,
 		abstract,
+		selectedText = $bindable(),
 		form = $bindable()
 	}: {
 		form: ActionData;
 		arxivId: string;
 		abstract: string;
+		selectedText?: string;
 	} = $props();
 	const chat = new Chat({});
 
@@ -43,6 +45,8 @@
 
 	let AIContainer = $state<HTMLDialogElement>();
 	let innerWidth = $state(0);
+
+	$inspect(selectedText)
 
 	async function initVectorDB() {
 		setupProgress = 'Initializing VectorDB...';
@@ -122,6 +126,7 @@
 							text: [
 								// Use the stored current query instead of the cleared userInput
 								`<user>${latestUserQuery}</user>`,
+								`<selectedText>${selectedText}</selectedText>`,
 								`<context>${yaml.dump(searchResults.map((result) => result.metadata))}</context>`
 							].join('\n')
 						});
@@ -157,7 +162,27 @@
 				AIContainer.showModal();
 			} else {
 				AIContainer.close();
+				selectedText = '';
 			}
+		}
+	});
+
+	$effect(() => {
+		if (AIContainer && innerWidth < 1180) {
+			const handleBackdropClick = (e: MouseEvent) => {
+				const rect = AIContainer!.getBoundingClientRect();
+				if (
+					e.clientX < rect.left ||
+					e.clientX > rect.right ||
+					e.clientY < rect.top ||
+					e.clientY > rect.bottom
+				) {
+					toggleOpen();
+				}
+			};
+
+			AIContainer.addEventListener('click', handleBackdropClick);
+			return () => AIContainer!.removeEventListener('click', handleBackdropClick);
 		}
 	});
 
@@ -234,13 +259,48 @@
 		</div>
 	</div>
 	<div class="AIChat__bottom-section">
+		{#if selectedText}
+			<div class="AIChat__selected-text-box">
+				<div class="AIChat__selected-text-header">
+					<span>Selected text</span>
+					<button
+						type="button"
+						class="CrispButton"
+						data-icon="close"
+						aria-label="Clear selected text"
+						onclick={() => {
+							selectedText = '';
+						}}
+					></button>
+				</div>
+				<div class="AIChat__selected-text-content">
+					{selectedText}
+				</div>
+			</div>
+		{/if}
 		<form
 			method="post"
 			action="?/rewrite"
 			class="AIChat__input"
+			onsubmit={async (e) => {
+				if (userQueryInput.trim() === '') {
+					e.preventDefault();
+					return false;
+				}
+				latestUserQuery = userQueryInput.trim();
+				userQueryInput = '';
+				// Don't clear selectedText here, let enhance handle it
+			}}
 			use:enhance={({ formData }) => {
 				if (latestUserQuery) formData.set('prompt', latestUserQuery);
 				formData.set('abstract', abstract);
+				// Capture selectedText before clearing it
+				const capturedSelectedText = selectedText || '';
+				formData.set('selectedText', capturedSelectedText);
+				
+				// Clear selectedText after capturing it
+				selectedText = '';
+
 				return async ({ update, result }) => {
 					if (result.type === 'success') {
 						const rewrittenQuery = result.data?.rewrittenQuery;
@@ -260,14 +320,6 @@
 					}
 					await update();
 				};
-			}}
-			onsubmit={async (e) => {
-				if (userQueryInput.trim() === '') {
-					e.preventDefault();
-					return false;
-				}
-				latestUserQuery = userQueryInput.trim();
-				userQueryInput = '';
 			}}
 		>
 			<textarea
@@ -322,12 +374,6 @@
 			@include respondAtOpp(1180px) {
 				@include box(100%);
 				// padding: 10px 10px 10px 10px;
-			}
-
-			@include respondAt(1180px) {
-				// transform: translateX(0);
-				height: 100vh;
-				transform: translateX(0);
 				// padding: 10px 10px 0px 10px !important;
 			}
 		}
@@ -396,7 +442,70 @@
 
 		&__bottom-section {
 			padding: 8px;
+			@include make-flex($dir: column, $just: flex-start, $align: stretch);
+			gap: 8px;
 			// border-top: 1px solid var(--muted-separator);
+		}
+
+		&__selected-text-box {
+			border-radius: 8px;
+			border: 1px solid var(--muted-separator);
+			background-color: var(--elevation-1);
+			overflow: hidden;
+			@include make-flex($dir: column, $just: flex-start, $align: stretch);
+		}
+
+		&__selected-text-header {
+			padding: 6px 8px;
+			border-bottom: 1px solid var(--muted-separator);
+			background-color: var(--elevation-2);
+			@include make-flex($dir: row, $just: space-between, $align: center);
+
+			span {
+				font-size: 12px;
+				font-weight: 500;
+				color: var(--muted-foreground-2);
+				font-family: var(--font-family);
+			}
+
+			.CrispButton {
+				@include box(20px, 20px);
+				padding: 2px;
+				border-radius: 4px;
+
+				&::before {
+					font-size: 14px;
+				}
+			}
+		}
+
+		&__selected-text-content {
+			padding: 8px;
+			font-size: 13px;
+			line-height: 1.5;
+			color: var(--foreground);
+			font-family: var(--font-family);
+			max-height: 120px;
+			overflow-y: auto;
+			word-wrap: break-word;
+			white-space: pre-wrap;
+
+			&::-webkit-scrollbar {
+				width: 4px;
+			}
+
+			&::-webkit-scrollbar-track {
+				background: transparent;
+			}
+
+			&::-webkit-scrollbar-thumb {
+				background: var(--muted-foreground-3);
+				border-radius: 2px;
+
+				&:hover {
+					background: var(--muted-foreground-2);
+				}
+			}
 		}
 
 		&__empty-state {
