@@ -81,7 +81,9 @@ const performance: Handle = async ({ event, resolve }) => {
 		...[
 			'menu',
 			'send',
+			"edit",
 			'close',
+			"delete",
 			'refresh',
 			'settings',
 			'arrow_upward',

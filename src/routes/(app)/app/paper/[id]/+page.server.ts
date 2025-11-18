@@ -12,6 +12,13 @@ import type { EmbeddingsFile } from '$types/RAG.type';
 import { generateText } from 'ai';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { GOOGLE_AI_API_KEY } from '$env/static/private';
+import {
+	createAnnotation,
+	getAnnotationsByPaperId,
+	updateAnnotation,
+	deleteAnnotation
+} from '$lib/db/Annotation.db';
+import nanoid from '$lib/utils/nanoid';
 
 const SYSTEM_PROMPT = `You are a search query optimizer for vector database searches. The database has chunks of a single research paper. The research paper may be from any discipline. Your task is to reformulate user queries into more effective search terms.
 
@@ -73,11 +80,15 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 		// Extract table of contents and remove it from HTML
 		const { toc, htmlContent: cleanedHtmlContent } = extractTableOfContents(htmlContent);
 
+		// Load annotations for this paper
+		const annotations = await getAnnotationsByPaperId(params.id, user.googleId);
+
 		return {
 			paperId: params.id,
 			htmlContent: cleanedHtmlContent,
 			abstract,
-			toc
+			toc,
+			annotations
 		};
 	} catch (err) {
 		console.error('Error loading paper:', err);
@@ -169,5 +180,80 @@ export const actions: Actions = {
 		});
 
 		return { success: true, rewrittenQuery: (await result).text };
+	},
+	createAnnotation: async ({ request, params, locals }) => {
+		const { user } = locals;
+
+		if (!user) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+		const selectedText = data.get('selectedText') as string;
+		const anchorText = data.get('anchorText') as string;
+		const note = data.get('note') as string;
+		const highlightColor = data.get('highlightColor') as string;
+		const startOffset = parseInt(data.get('startOffset') as string);
+		const endOffset = parseInt(data.get('endOffset') as string);
+
+		if (!selectedText || !anchorText) {
+			throw error(400, 'Selected text and anchor text are required');
+		}
+
+		const now = new Date().toISOString();
+		const annotation = {
+			id: nanoid(),
+			paperId: params.id!,
+			userId: user.googleId,
+			selectedText,
+			anchorText,
+			note: note || '',
+			highlightColor: highlightColor || '#ffeb3b',
+			startOffset,
+			endOffset,
+			createdAt: now,
+			updatedAt: now
+		};
+
+		await createAnnotation(annotation);
+
+		return { success: true, annotation };
+	},
+	updateAnnotation: async ({ request, locals }) => {
+		const { user } = locals;
+
+		if (!user) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+		const id = data.get('id') as string;
+		const note = data.get('note') as string;
+
+		if (!id) {
+			throw error(400, 'Annotation ID is required');
+		}
+
+		await updateAnnotation(id, { note });
+
+		return { success: true };
+	},
+	deleteAnnotation: async ({ request, locals }) => {
+		const { user } = locals;
+
+		if (!user) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+		const id = data.get('id') as string;
+
+		if (!id) {
+			throw error(400, 'Annotation ID is required');
+		}
+
+		await deleteAnnotation(id);
+
+		return { success: true };
 	}
 };
