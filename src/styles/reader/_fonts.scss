@@ -1,4 +1,4 @@
-@use "./include-media" as *;
+@use './include-media' as *;
 
 $rootFontFaceURL: 'https://cdn.jsdelivr.net/gh/arxiv-vanity/computer-modern@ec5980c33198e5c15debcae604bfff93fed5abf5';
 // FIXME: ideally this would be $fontDisplay, but percy produces indeterminate screenshots when that is the case
@@ -68,16 +68,16 @@ $fontDisplay: 'auto';
 	font-display: $fontDisplay;
 }
 
-$fontFamilyComputerModern: 'Computer Modern Serif', Georgia, serif;
+$fontFamilyComputerModern: 'Quicksand', sans-serif;
 $fontFamilyHelvetica: 'Helvetica Neue', Helvetica, sans-serif;
-$fontFamilyMonospace: 'Computer Modern Typewriter', monospace;
+$fontFamilyMonospace: 'Quicksand', sans-serif;
 
 // !important is used everywhere to stop inline styles from changing the font size
 
 @mixin font-body() {
 	font-family: $fontFamilyComputerModern;
 	font-size: 22px !important;
-	line-height: 1.5;
+	line-height: 1.625;
 
 	@include media('>=tablet', '<desktop') {
 		font-size: 22px !important;

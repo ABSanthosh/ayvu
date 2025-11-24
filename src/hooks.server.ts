@@ -64,7 +64,7 @@ const authentication: Handle = async ({ event, resolve }) => {
 const authorization: Handle = async ({ event, resolve }) => {
 	const googleSub = event.cookies.get('session');
 	const protectedRoutes = ['/app'];
-
+	console.log(googleSub, event.url.pathname);
 	if (protectedRoutes.some((route) => event.url.pathname.startsWith(route))) {
 		if (!googleSub) {
 			throw redirect(303, '/?error=unauthorized');
@@ -81,15 +81,15 @@ const performance: Handle = async ({ event, resolve }) => {
 		...[
 			'menu',
 			'send',
-			"edit",
+			'edit',
 			'close',
-			"delete",
+			'delete',
 			'refresh',
 			'settings',
 			'arrow_upward',
 			'dock_to_right',
-			"dock_to_left",
-			'side_navigation',
+			'dock_to_left',
+			'side_navigation'
 		].sort((a, b) => a.localeCompare(b))
 	] as const;
 

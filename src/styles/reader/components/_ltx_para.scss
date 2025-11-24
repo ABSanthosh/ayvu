@@ -3,6 +3,10 @@
 .ltx_para {
   @include font-body();
 
+  &:not(:last-child) {
+    margin-bottom: 24px;
+  }
+
   // HACK: stop inline math from overflowing scrolling whole page on mobile
   // Disabled because this stops paragraph headings from working.
   // @include media("<desktop") {
